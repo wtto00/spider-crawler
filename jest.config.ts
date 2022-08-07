@@ -1,4 +1,4 @@
-import { InitialOptionsTsJest } from 'ts-jest';
+import type { InitialOptionsTsJest } from 'ts-jest';
 
 const config: InitialOptionsTsJest = {
   clearMocks: true,

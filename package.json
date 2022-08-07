@@ -4,18 +4,21 @@
   "description": "定义一个json格式的爬虫规则，Nodejs按照该规则爬取所需要的内容",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "module": "lib/esm/index.js",
+  "module": "es/index.js",
   "exports": {
     ".": {
       "require": "./lib/index.js",
-      "import": "./lib/esm/index.js"
+      "import": "./es/index.js"
     }
   },
   "files": [
-    "lib"
+    "dist/es",
+    "dist/lib"
   ],
   "scripts": {
     "test": "jest",
+    "test:w": "jest --watchAll",
+    "test:c": "jest --coverage",
     "build": "npm run build:cjs & npm run build:esm",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc",
@@ -38,6 +41,10 @@
     "url": "https://github.com/wtto00/node-spider-crawler/issues"
   },
   "homepage": "https://github.com/wtto00/node-spider-crawler#readme",
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "node-fetch": "^3.2.10"
+  },
   "devDependencies": {
     "@types/jest": "^28.1.6",
     "@types/node": "^18.0.6",
@@ -60,7 +67,6 @@
       "prettier --write --ignore-unknown"
     ],
     "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
       "eslint --color --fix"
     ]
   }
