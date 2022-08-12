@@ -31,7 +31,7 @@ export type SelectorArgsHandler = AllSelectorArgsHandler[HandlerMethodKeys];
 export interface ResultMapHandler {
   handlers: SelectorHandler[];
 }
-export type ResultsMapHandler = Record<string, ResultMapHandler[]>;
+export type ResultsMapHandler = Record<string, ResultMapHandler>;
 export interface SelectorMapHandler {
   method: 'map';
   results: ResultsMapHandler;
@@ -44,7 +44,7 @@ export interface ResultHandler {
   handlers: SelectorHandler[];
 }
 
-export type ResultsHandler = Record<string, ResultHandler[]>;
+export type ResultsHandler = Record<string, ResultHandler>;
 export interface CrawlerOptions {
   url: string;
   options?: RequestInit;
@@ -57,5 +57,5 @@ export interface CrawlerResult {
   // 信息说明
   message: string;
   // 结果信息
-  data: Record<string, never>;
+  data: Record<string, any>;
 }

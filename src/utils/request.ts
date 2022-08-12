@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import type { RequestInfo, RequestInit, FetchError } from 'node-fetch';
 
-function request(url: RequestInfo, options?: RequestInit): Promise<string> {
+export default function request(url: RequestInfo, options?: RequestInit): Promise<string> {
   return new Promise((resolve, reject) => {
     fetch(url, options)
       .then((res) => res.text())
@@ -13,5 +13,3 @@ function request(url: RequestInfo, options?: RequestInit): Promise<string> {
       });
   });
 }
-
-export default request;
