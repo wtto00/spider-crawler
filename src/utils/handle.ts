@@ -1,6 +1,7 @@
 import { AnyNode, Cheerio, CheerioAPI, load } from 'cheerio';
 import type { ResultsHandler, ResultsMapHandler } from '../types';
 import * as apis from './apis';
+import { CrawlerError, ErrorCode } from './result';
 
 export function handleCheerio(
   results: ResultsHandler | ResultsMapHandler,
@@ -14,6 +15,9 @@ export function handleCheerio(
     let res: any = cheerioNode;
     if ('selector' in resultHandler) {
       res = $(resultHandler.selector);
+      if (res.length === 0) {
+        throw new CrawlerError(ErrorCode.EMPTY);
+      }
     }
 
     resultHandler.handlers.forEach((handler) => {

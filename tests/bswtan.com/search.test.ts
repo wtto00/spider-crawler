@@ -1,6 +1,6 @@
-import { CrawlerResultCode } from '../src/utils/enum';
-import type { CrawlerOptions } from '../src/types';
-import { crawl } from '../src/index';
+import type { CrawlerOptions } from '../../src/types';
+import { crawl } from '../../src/index';
+import { ResultCodes } from '../../src/utils/result';
 
 const config: CrawlerOptions = {
   url: 'https://www.bswtan.com/modules/article/search.php',
@@ -49,8 +49,22 @@ const config: CrawlerOptions = {
   },
 };
 
-test('search', () =>
-  crawl(config).then((data) => {
-    expect(data.code).toBe(CrawlerResultCode.SUCCESS);
-    expect([...data.data['list']].length).toBeGreaterThan(0);
+test('search right', () =>
+  crawl(config).then((res) => {
+    expect(res.code).toBe(ResultCodes.SUCCESS);
+    expect([...res.data['list']].length).toBeGreaterThan(0);
+  }));
+
+const emptyOptions: CrawlerOptions = {
+  ...config,
+  options: {
+    method: 'POST',
+    body: 'searchkey=1231232131',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  },
+};
+
+test('search empty', () =>
+  crawl(emptyOptions).then((res) => {
+    expect(res.code).toBe(ResultCodes.EMPTY);
   }));

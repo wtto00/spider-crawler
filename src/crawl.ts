@@ -1,7 +1,7 @@
-import { CrawlerResultCode } from './utils/enum';
-import type { CrawlerOptions, CrawlerResult } from './types';
+import type { CrawlerOptions } from './types';
 import handleResult from './utils/handle';
 import request from './utils/request';
+import { CrawlerError, CrawlerResult, ErrorCode } from './utils/result';
 
 async function crawl(crawlerOptions: CrawlerOptions): Promise<CrawlerResult> {
   try {
@@ -11,17 +11,12 @@ async function crawl(crawlerOptions: CrawlerOptions): Promise<CrawlerResult> {
 
     const data = handleResult(html, results);
 
-    return {
-      code: CrawlerResultCode.SUCCESS,
-      message: 'success',
-      data: data,
-    };
+    return new CrawlerResult(data);
   } catch (error) {
-    return {
-      code: CrawlerResultCode.UNKNOWN,
-      message: (error as Error).message,
-      data: {},
-    };
+    if (error instanceof CrawlerError) {
+      return new CrawlerResult(error);
+    }
+    return new CrawlerResult(new CrawlerError(ErrorCode.UNKNOWN));
   }
 }
 

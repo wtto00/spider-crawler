@@ -1,5 +1,4 @@
 import type { RequestInit } from 'node-fetch';
-import type { CrawlerResultCode } from './utils/enum';
 
 interface HandlerMethods {
   attr: (name: string) => string;
@@ -49,13 +48,4 @@ export interface CrawlerOptions {
   url: string;
   options?: RequestInit;
   results: ResultsHandler;
-}
-
-export interface CrawlerResult {
-  // 是否结果正确
-  code: CrawlerResultCode;
-  // 信息说明
-  message: string;
-  // 结果信息
-  data: Record<string, any>;
 }
