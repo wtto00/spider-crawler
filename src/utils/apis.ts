@@ -5,9 +5,6 @@ import { handleCheerio } from './handle';
 export function prefix(res: string, _$: CheerioAPI, args: any[]) {
   return `${args[0] || ''}${res || ''}`;
 }
-export function suffix(res: string, _$: CheerioAPI, args: any[]) {
-  return `${res || ''}${args[0] || ''}`;
-}
 export function trim(res: string, _$: CheerioAPI, _args: any) {
   return res.trim();
 }

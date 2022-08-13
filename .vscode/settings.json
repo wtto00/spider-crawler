@@ -1,0 +1,14 @@
+{
+  "jest.nodeEnv": {},
+  "jest.debugMode": true,
+  "jest.coverageColors": {
+    "covered": "rgba(9, 156, 65, 0.4)",
+    "uncovered": "rgba(121, 31, 10, 0.4)",
+    "partially-covered": "rgba(235, 198, 52, 0.4)"
+  },
+  "jest.debugCodeLens.showWhenTestStateIn": ["fail", "unknown", "pass", "skip"],
+  "jest.autoRun": { "watch": false, "onStartup": ["all-tests"] },
+  "jest.showCoverageOnLoad": true,
+  "jest.jestCommandLine": "npm run test --",
+  "jest.rootPath": "."
+}

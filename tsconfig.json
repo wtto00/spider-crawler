@@ -27,5 +27,10 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true
   },
+  "ts-node": {
+    "esm": true,
+    "experimentalResolver": true,
+    "experimentalSpecifierResolution": "node"
+  },
   "include": ["src"]
 }
