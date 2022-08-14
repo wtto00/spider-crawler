@@ -67,6 +67,9 @@
     ],
     "*.{js,jsx,ts,tsx}": [
       "eslint --color --fix"
+    ],
+    "*.{ts,tsx}": [
+      "tsc --noEmit --pretty"
     ]
   }
 }
