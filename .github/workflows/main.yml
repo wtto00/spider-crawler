@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/setup-node@v1
       with:
-        node-version: 'lts/*'
+        node-version: 'lts'
     - uses: actions/checkout@v1
     - name: Install Dependencies
       run: npm install
