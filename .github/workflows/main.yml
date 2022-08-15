@@ -9,12 +9,13 @@ jobs:
     steps:
     - uses: actions/setup-node@v1
       with:
-        node-version: 'lts'
+        node-version: 16
+        cache: 'pnpm'
     - uses: actions/checkout@v1
     - name: Install Dependencies
       run: npm install
     - name: Run tests and collect coverage
-      run: npm run test
+      run: pnpm test
     - name: Upload coverage reports to Codecov
       run: |
         # Replace `linux` below with the appropriate OS
