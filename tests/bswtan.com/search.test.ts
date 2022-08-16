@@ -1,8 +1,8 @@
 import type { CrawlerOptions } from '../../src/types';
-import { crawl } from '../../src/index';
+import { crawl } from '../../src';
 import { ResultCodes } from '../../src/utils/result';
 
-const config: CrawlerOptions = {
+const searchOptions: CrawlerOptions = {
   url: 'https://www.bswtan.com/modules/article/search.php',
   options: {
     method: 'POST',
@@ -49,14 +49,14 @@ const config: CrawlerOptions = {
   },
 };
 
-test('search right', () =>
-  crawl(config).then((res) => {
+test('search books', () =>
+  crawl(searchOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
     expect([...res.data['list']].length).toBeGreaterThan(0);
   }));
 
 const emptyOptions: CrawlerOptions = {
-  ...config,
+  ...searchOptions,
   options: {
     method: 'POST',
     body: 'searchkey=1231232131',
@@ -64,7 +64,7 @@ const emptyOptions: CrawlerOptions = {
   },
 };
 
-test('search empty', () =>
+test('search books empty', () =>
   crawl(emptyOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.EMPTY);
   }));

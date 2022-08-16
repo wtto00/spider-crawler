@@ -2,7 +2,10 @@ import type { AnyNode, Cheerio, CheerioAPI } from 'cheerio';
 import type { ResultsMapHandler } from '../types';
 import { handleCheerio } from './handle';
 
-export function prefix(res: string, _$: CheerioAPI, args: any[]) {
+/**
+ * 爬取的结果 添加前缀字符串
+ */
+export function prefix(res: string, _$: CheerioAPI, args: [string]) {
   return `${args[0] || ''}${res || ''}`;
 }
 export function trim(res: string, _$: CheerioAPI, _args: any) {

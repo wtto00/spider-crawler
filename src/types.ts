@@ -2,9 +2,6 @@ import type { RequestInit } from 'node-fetch';
 
 interface HandlerMethods {
   attr: (name: string) => string;
-  // prop: (name: string) => string;
-  // data: (data?: string) => string;
-  // val: () => string;
   find: (selector: string) => [];
   text: () => string;
   trim: () => string;
