@@ -1,10 +1,10 @@
-import type { CrawlerOptions, ResultsHandler } from '../src/types';
+import type { CrawlerOptions, Rules } from '../src/types';
 import { crawl } from '../src/index';
-import { ResultCodes } from '../src/utils/result';
+import { ResultCodes } from '../src/result';
 
 const requestErrorOptions: CrawlerOptions = {
   url: 'asdasda.dfadf',
-  results: {},
+  rules: {},
 };
 
 test('request error', () =>
@@ -14,7 +14,7 @@ test('request error', () =>
 
 const resultsEmptyOptions: CrawlerOptions = {
   url: 'https://www.baidu.com',
-  results: undefined as unknown as ResultsHandler,
+  rules: undefined as unknown as Rules,
 };
 
 test('results empty', () =>

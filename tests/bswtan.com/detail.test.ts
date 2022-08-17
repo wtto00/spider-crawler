@@ -1,10 +1,10 @@
 import { crawl } from '../../src';
 import type { CrawlerOptions } from '../../src/types';
-import { ResultCodes } from '../../src/utils/result';
+import { ResultCodes } from '../../src/result';
 
 const detaliOptions: CrawlerOptions = {
   url: 'https://www.bswtan.com/7/7657/',
-  results: {
+  rules: {
     name: {
       selector: "meta[property='og:novel:book_name']",
       handlers: [{ method: 'attr', args: ['content'] }],
@@ -54,15 +54,17 @@ const detaliOptions: CrawlerOptions = {
       handlers: [
         {
           method: 'map',
-          results: {
-            title: { handlers: [{ method: 'text' }] },
-            chapterUrl: {
-              handlers: [
-                { method: 'attr', args: ['href'] },
-                { method: 'prefix', args: ['https://www.bswtan.com/7/7657/'] },
-              ],
+          args: [
+            {
+              title: { handlers: [{ method: 'text' }] },
+              chapterUrl: {
+                handlers: [
+                  { method: 'attr', args: ['href'] },
+                  { method: 'prefix', args: ['https://www.bswtan.com/7/7657/'] },
+                ],
+              },
             },
-          },
+          ],
         },
       ],
     },
@@ -71,15 +73,17 @@ const detaliOptions: CrawlerOptions = {
       handlers: [
         {
           method: 'map',
-          results: {
-            name: { handlers: [{ method: 'text' }] },
-            readUrl: {
-              handlers: [
-                { method: 'attr', args: ['href'] },
-                { method: 'prefix', args: ['https://www.bswtan.com'] },
-              ],
+          args: [
+            {
+              name: { handlers: [{ method: 'text' }] },
+              readUrl: {
+                handlers: [
+                  { method: 'attr', args: ['href'] },
+                  { method: 'prefix', args: ['https://www.bswtan.com'] },
+                ],
+              },
             },
-          },
+          ],
         },
       ],
     },
@@ -88,15 +92,17 @@ const detaliOptions: CrawlerOptions = {
       handlers: [
         {
           method: 'map',
-          results: {
-            name: { handlers: [{ method: 'text' }] },
-            readUrl: {
-              handlers: [
-                { method: 'attr', args: ['href'] },
-                { method: 'prefix', args: ['https://www.bswtan.com'] },
-              ],
+          args: [
+            {
+              name: { handlers: [{ method: 'text' }] },
+              readUrl: {
+                handlers: [
+                  { method: 'attr', args: ['href'] },
+                  { method: 'prefix', args: ['https://www.bswtan.com'] },
+                ],
+              },
             },
-          },
+          ],
         },
       ],
     },
