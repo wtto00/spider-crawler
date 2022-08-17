@@ -3,4 +3,4 @@ export { crawl };
 
 export * from './types';
 
-export * from './utils/result';
+export * from './result';

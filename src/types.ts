@@ -1,48 +1,28 @@
 import type { RequestInit } from 'node-fetch';
+import type Api from './api';
 
-interface HandlerMethods {
-  attr: (name: string) => string;
-  find: (selector: string) => [];
-  text: () => string;
-  trim: () => string;
-  prefix: (prefix: string) => string;
-}
+export type Method = Exclude<keyof Api, 'results'>;
 
-export type HandlerMethodKeys = keyof HandlerMethods;
-
-interface SelectorEmptyArgsHandlerType<T extends HandlerMethodKeys> {
-  method: T;
-}
-interface SelectorArgsHandlerType<T extends HandlerMethodKeys> {
-  method: T;
-  args: Parameters<HandlerMethods[T]>;
-}
-type AllSelectorArgsHandler = {
-  [K in HandlerMethodKeys]: Parameters<HandlerMethods[K]> extends []
-    ? SelectorEmptyArgsHandlerType<K>
-    : SelectorArgsHandlerType<K>;
+type AllMethods = {
+  [K in Method]: Parameters<Api[K]> extends [] ? EmprtyHandlerType<K> : HandlerType<K>;
 };
-export type SelectorArgsHandler = AllSelectorArgsHandler[HandlerMethodKeys];
-
-export interface ResultMapHandler {
-  handlers: SelectorHandler[];
+interface EmprtyHandlerType<T extends Method> {
+  method: T;
 }
-export type ResultsMapHandler = Record<string, ResultMapHandler>;
-export interface SelectorMapHandler {
-  method: 'map';
-  results: ResultsMapHandler;
+interface HandlerType<T extends Method> {
+  method: T;
+  args: Parameters<Api[T]>;
 }
+export type Handler = AllMethods[Method];
 
-export type SelectorHandler = SelectorMapHandler | SelectorArgsHandler;
-
-export interface ResultHandler {
-  selector: string;
-  handlers: SelectorHandler[];
+export interface Rule {
+  selector?: string;
+  handlers: Handler[];
 }
 
-export type ResultsHandler = Record<string, ResultHandler>;
+export type Rules = Record<string, Rule>;
 export interface CrawlerOptions {
   url: string;
   options?: RequestInit;
-  results: ResultsHandler;
+  rules: Rules;
 }
