@@ -1,7 +1,6 @@
-import type { CrawlerOptions } from './src/types';
-import { crawl } from './src/index';
+import { crawl, CrawlerOptions, ResultCodes } from '../../src';
 
-const searchOptions: CrawlerOptions = {
+const options: CrawlerOptions = {
   url: 'https://www.bswtan.com/7/7657/4846088.html',
   rules: {
     title: {
@@ -18,11 +17,15 @@ const searchOptions: CrawlerOptions = {
     },
     content: {
       selector: '#content',
-      handlers: [{ method: 'html' }, { method: 'br2nl' }, { method: 'text' }, { method: 'trim' }],
+      handlers: [{ method: 'html' }, { method: 'br2nl' }, { method: 'decode' }, { method: 'trim' }],
     },
   },
 };
 
-crawl(searchOptions).then((res) => {
-  console.log({ ...res });
+test('book content', () => {
+  return crawl(options).then((res) => {
+    console.log(res.data);
+
+    expect(res.code).toBe(ResultCodes.SUCCESS);
+  });
 });
