@@ -17,7 +17,7 @@ async function crawl(crawlerOptions: CrawlerOptions): Promise<CrawlerResult> {
 
     const $ = load(html);
 
-    const api = new Api(rules, $);
+    const api = new Api(url, rules, $);
 
     return new CrawlerResult(api.results);
   } catch (error) {

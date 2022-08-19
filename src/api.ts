@@ -5,31 +5,28 @@ import { CrawlerError, ErrorCode } from './result';
 type CEle = Cheerio<AnyNode>;
 
 export default class Api {
+  private url: string;
+
   private $: CheerioAPI;
 
   private source: any;
 
   results: Record<string, any> = {};
 
-  private variableSource: any;
-
-  constructor(rules: Rules, $: CheerioAPI, cheerioNode?: CEle) {
+  constructor(url: string, rules: Rules, $: CheerioAPI, cheerioNode?: CEle) {
+    this.url = url;
     this.$ = $;
-    this.source = cheerioNode;
 
     // 开始根据规则 解析
     Object.keys(rules).forEach((key) => {
       const rule = rules[key];
-      this.variableSource = cheerioNode;
+      this.source = cheerioNode;
 
       // Rules
       if ('selector' in rule) {
-        this.variableSource = $(rule.selector);
-        if (this.variableSource.length === 0) {
+        this.source = $(rule.selector);
+        if (this.source.length === 0) {
           throw new CrawlerError(ErrorCode.EMPTY);
-        }
-        if (!this.source) {
-          this.source = $(rule.selector);
         }
       }
 
@@ -37,16 +34,16 @@ export default class Api {
       rule.handlers.forEach((handler) => {
         if (handler.method in Object.getPrototypeOf(this)) {
           if ('args' in handler) {
-            this.variableSource = this[handler.method](...(handler.args as unknown as [any]));
+            this.source = this[handler.method](...(handler.args as unknown as [never]));
           } else {
-            this.variableSource = this[handler.method]();
+            this.source = this[handler.method]();
           }
         } else {
           throw new CrawlerError(ErrorCode.ILLEGALMETHOD, { method: handler.method });
         }
       });
 
-      this.results[key] = this.variableSource;
+      this.results[key] = this.source;
     });
   }
 
@@ -56,7 +53,7 @@ export default class Api {
    * @returns
    */
   prefix(str: string) {
-    return `${str || ''}${this.variableSource as string}`;
+    return `${str || ''}${this.source as string}`;
   }
 
   /**
@@ -64,45 +61,94 @@ export default class Api {
    * @returns
    */
   trim() {
-    return (this.variableSource as string).trim();
+    return (this.source as string).trim();
   }
 
   /**
-   * 读取html某个元素的某个属性的值
-   * 空参数则读取全部属性的值
+   * 获得的路径与当前请求地址相混合
+   * @returns
+   */
+  resolveUrl() {
+    return new URL(this.source as string, this.url).href;
+  }
+
+  /**
+   * 把html中的br替换成文本换行符
+   * 匹配<br />,<br/><br >,<br>以及其中的空格以及\n换行符
+   * @returns
+   */
+  br2nl() {
+    return (this.source as string).replace(/(<br\s?\/?>|\n)+((\s+\n+)|(\s+<br\s?\/?>+)|\n+|<br\s?\/?>+)*/gi, '\n\n');
+  }
+
+  /**
+   * HTML entities decode
+   * html字符串反序列化到正常的阅读文本
+   * @returns
+   */
+  decode() {
+    return this.$('<div />')
+      .html(this.source as string)
+      .text();
+  }
+
+  /**
+   * 获取属性的方法。
+   * 在匹配集合中只能获取的第一个元素的属性值。
+   * @param name 属性名称
    */
   attr(): Record<string, string>;
   attr(name: string): string;
   attr(name?: string): string | Record<string, string> {
-    if (name) return (this.variableSource as CEle).attr(name) || '';
-    return (this.variableSource as CEle).attr() || {};
+    if (name) return (this.source as CEle).attr(name) || '';
+    return (this.source as CEle).attr() || {};
   }
 
   /**
-   * 在某个元素下查找元素
+   * 通过选择器、jQuery对象或元素来过滤，获取每个匹配元素的后代。
    * @param selector 选择器
    * @returns
    */
   find(selector: string) {
-    return (this.variableSource as CEle).find(selector || '');
+    return (this.source as CEle).find(selector || '');
   }
 
   /**
-   * 获取元素的内部文本字符串
+   * 根据索引来确定元素。使用 .eq(-i) 的则是倒过来计数。
+   * @param index 元素所在索引
+   * @returns
+   */
+  eq(index: number) {
+    return (this.source as CEle).eq(index);
+  }
+
+  /**
+   * 获取元素集合中的每个元素的合并文本内容，包括它们的后代
    * @returns
    */
   text() {
-    return (this.variableSource as CEle).text();
+    return (this.source as CEle).text();
   }
 
   /**
-   * 多个元素的集合循环处理获得一组数据
+   * 获取第一个选中元素的HTML内容字符串
+   * @returns
+   */
+  html() {
+    return (this.source as CEle).html();
+  }
+
+  /**
+   * 通过每个在匹配函数产生的匹配集合中的匹配元素，产生一个新的包含返回值的cheerio对象。
+   * 该函数可以返回一个单独的数据项或一组数据项被插入到所得到的集合中。
+   * 如果返回一个数组，数组中的元素插入到集合中。
+   * 如果函数返回空或未定义，则将插入任何元素。
    * @param rules map循环的内部规则
    * @returns
    */
   map(rules: Rules) {
-    return (this.variableSource as CEle).map((_: number, eleItem: AnyNode) => {
-      const api = new Api(rules, this.$, this.$(eleItem));
+    return (this.source as CEle).map((_: number, eleItem: AnyNode) => {
+      const api = new Api(this.url, rules, this.$, this.$(eleItem));
       return api.results;
     });
   }
