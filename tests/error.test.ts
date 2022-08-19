@@ -21,3 +21,19 @@ test('results empty', () =>
   crawl(resultsEmptyOptions).then((res) => {
     expect(res.data).toEqual({});
   }));
+
+const illegalMethodOptions: CrawlerOptions = {
+  url: 'https://www.baidu.com',
+  rules: {
+    test: {
+      selector: 'noscript',
+      // just test error
+      handlers: [{ method: 'aaa' as any }],
+    },
+  },
+};
+
+test("method doesn't exist", () =>
+  crawl(illegalMethodOptions).then((res) => {
+    expect(res.code).toBe(ResultCodes.ILLEGALMETHOD);
+  }));

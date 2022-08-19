@@ -1,28 +1,16 @@
 import type { CrawlerOptions } from './src/types';
 import { crawl } from './src/index';
-
-const searchOptions: CrawlerOptions = {
-  url: 'https://www.bswtan.com/7/7657/4846088.html',
+const illegalMethodOptions: CrawlerOptions = {
+  url: 'https://www.baidu.com',
   rules: {
-    title: {
-      selector: '.bookname>h1',
-      handlers: [{ method: 'text' }],
-    },
-    previousChapter: {
-      selector: '.bottem1>a',
-      handlers: [{ method: 'eq', args: [1] }, { method: 'attr', args: ['href'] }, { method: 'resolveUrl' }],
-    },
-    nextChapter: {
-      selector: '.bottem1>a',
-      handlers: [{ method: 'eq', args: [3] }, { method: 'attr', args: ['href'] }, { method: 'resolveUrl' }],
-    },
-    content: {
-      selector: '#content',
-      handlers: [{ method: 'html' }, { method: 'br2nl' }, { method: 'text' }, { method: 'trim' }],
+    test: {
+      selector: '.cp-feedback',
+      // just test error
+      handlers: [{ method: 'aaa' as any }],
     },
   },
 };
 
-crawl(searchOptions).then((res) => {
-  console.log({ ...res });
+crawl(illegalMethodOptions).then((res) => {
+  console.log(res);
 });
