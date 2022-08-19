@@ -24,8 +24,10 @@ const options: CrawlerOptions = {
 
 test('book content', () => {
   return crawl(options).then((res) => {
-    console.log(res.data);
-
     expect(res.code).toBe(ResultCodes.SUCCESS);
+    expect(res.data['title']).toEqual('1、想等的人');
+    expect(res.data['previousChapter']).toEqual('https://www.bswtan.com/7/7657/');
+    expect(res.data['nextChapter']).toEqual('https://www.bswtan.com/7/7657/4846089.html');
+    expect(res.data['content'].length).toBeGreaterThan(0);
   });
 });
