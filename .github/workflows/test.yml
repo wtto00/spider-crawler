@@ -7,14 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Test Crawler API
     steps:
+    - uses: actions/checkout@v2.4.2
+    - uses: pnpm/action-setup@v2
     - uses: actions/setup-node@v3.4.1
       with:
         node-version: 16
         cache: 'pnpm'
-    - uses: actions/checkout@v2.4.2
     - name: Install Dependencies
       run: pnpm i
-    - name: Run tests and collect coverage
+    - name: Run tests
       run: pnpm test
     #- name: Upload coverage reports to Codecov
     #  run: |
