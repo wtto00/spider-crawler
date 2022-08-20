@@ -6,6 +6,8 @@ const config: InitialOptionsTsJest = {
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
 
+  testTimeout: 10000,
+
   preset: 'ts-jest/presets/default-esm',
   globals: {
     'ts-jest': {
