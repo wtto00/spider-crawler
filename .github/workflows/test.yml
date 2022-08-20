@@ -7,19 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Test Crawler API
     steps:
+    - uses: actions/checkout@v2.4.2
+    - uses: pnpm/action-setup@v2.2.2
+      with:
+        version: latest
     - uses: actions/setup-node@v3.4.1
       with:
         node-version: 16
         cache: 'pnpm'
-    - uses: actions/checkout@v2.4.2
-    - name: Install Dependencies
-      run: pnpm i
-    - name: Run tests and collect coverage
-      run: pnpm test
-    #- name: Upload coverage reports to Codecov
-    #  run: |
-    #    # Replace `linux` below with the appropriate OS
-    #    # Options are `alpine`, `linux`, `macos`, `windows`
-    #    curl -Os https://uploader.codecov.io/latest/linux/codecov
-    #    chmod +x codecov
-    #    ./codecov -t ${{secrets.CODECOV_TOKEN}}
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm test
