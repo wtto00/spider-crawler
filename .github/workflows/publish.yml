@@ -1,3 +1,5 @@
+name: Main Ci
+
 on:
   push:
     branches: ['main']
@@ -7,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Test Codecov
+    name: Test Api
     steps:
       - uses: actions/checkout@v2.4.2
       - uses: pnpm/action-setup@v2.2.2
@@ -17,12 +19,9 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+          registry-url: https://npm.pkg.github.com/
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
-      - name: Upload coverage reports to Codecov
-        run: |
-          # Replace `linux` below with the appropriate OS
-          # Options are `alpine`, `linux`, `macos`, `windows`
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t ${{secrets.CODECOV_TOKEN}}
+      - run: pnpm build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
