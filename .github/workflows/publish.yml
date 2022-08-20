@@ -1,11 +1,13 @@
-name: API workflow
+name: Main Ci
 
-on: [pull_request]
+on:
+  release:
+    types: [published]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Test Crawler API
+    name: Build Publish
     steps:
       - uses: actions/checkout@v2.4.2
       - uses: pnpm/action-setup@v2.2.2
@@ -15,5 +17,9 @@ jobs:
         with:
           node-version: 16
           cache: 'pnpm'
+          registry-url: https://npm.pkg.github.com/
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      - run: pnpm build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
