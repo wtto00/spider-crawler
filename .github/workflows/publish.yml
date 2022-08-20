@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Test Api
+    name: Build Publish
     steps:
       - uses: actions/checkout@v2.4.2
       - uses: pnpm/action-setup@v2.2.2
