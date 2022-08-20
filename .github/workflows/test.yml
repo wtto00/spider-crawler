@@ -1,11 +1,9 @@
-name: Publish to NPM
+name: API workflow
 
-on:
-  release:
-    types: [published]
+on: [pull_request]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     name: Test Crawler API
     steps:
@@ -19,11 +17,3 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
-      - name: Upload coverage reports to Codecov
-        if: ${{ github.ref_name == 'main' }}
-        run: |
-          # Replace `linux` below with the appropriate OS
-          # Options are `alpine`, `linux`, `macos`, `windows`
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t ${{secrets.CODECOV_TOKEN}}
