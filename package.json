@@ -1,5 +1,5 @@
 {
-  "name": "spider-crawler",
+  "name": "@wtto00/spider-crawler",
   "version": "0.0.1",
   "description": "定义一个json格式的爬虫规则，Nodejs按照该规则爬取所需要的内容",
   "type": "module",

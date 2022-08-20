@@ -1,4 +1,4 @@
-name: Main Ci
+name: Publish Ci
 
 on:
   release:
