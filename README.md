@@ -144,11 +144,11 @@ interface Handler {
   根据索引来确定元素。使用 .eq(-i) 的则是倒过来计数。  
   `args: [number]`
 - **text**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#text-textstring-)
+  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#text-textstring-)  
   获取元素集合中的每个元素的合并文本内容，包括它们的后代  
   不需要`args`
 - **html**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#html-htmlstring-)
+  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#html-htmlstring-)  
   获取第一个选中元素的 HTML 内容字符串  
   不需要`args`
 - **map**
