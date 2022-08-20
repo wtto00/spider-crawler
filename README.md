@@ -105,56 +105,56 @@ interface Handler {
 
 下边列举所有的可以方法以及相对应的参数
 
-- **prefix**
-  开头添加字符串
+- **prefix**  
+  开头添加字符串  
   `args: [string]`
-- **substring**
-  对字符串结果进行截取
+- **substring**  
+  对字符串结果进行截取  
   `args: [number,?number]`
-- **replace**
-  字符串全局替换
+- **replace**  
+  字符串全局替换  
   `args: [string,string]`
-- **trim**
-  去除开头与结尾的空格
+- **trim**  
+  去除开头与结尾的空格  
   不需要`args`
-- **resolveUrl**
-  获得的路径与当前请求地址相混合
+- **resolveUrl**  
+  获得的路径与当前请求地址相混合  
   不需要`args`
-- **number**
-  把字符串转为数字
+- **number**  
+  把字符串转为数字  
   不需要`args`
-- **br2nl**
-  把 `html` 中的 `br` 替换成文本换行符`\n`
-  匹配`<br />,<br/><br >,<br>`以及其中的空格以及`\n`换行符
+- **br2nl**  
+  把 `html` 中的 `br` 替换成文本换行符`\n`  
+  匹配`<br />,<br/><br >,<br>`以及其中的空格以及`\n`换行符  
   不需要`args`
-- **decode**
-  html 字符串反序列化到正常的阅读文本
+- **decode**  
+  html 字符串反序列化到正常的阅读文本  
   不需要`args`
-- **attr**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#attr-name-value--1)
-  获取属性的方法。
-  在匹配集合中只能获取的第一个元素的属性值。
+- **attr**  
+  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#attr-name-value--1)  
+  获取属性的方法。  
+  在匹配集合中只能获取的第一个元素的属性值。  
   `args?: [string]`
 - **find**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#findselector)
-  通过选择器、jQuery 对象或元素来过滤，获取每个匹配元素的后代。
+  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#findselector)  
+  通过选择器、jQuery 对象或元素来过滤，获取每个匹配元素的后代。  
   `args: [string]`
 - **eq**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#eq-i-)
-  根据索引来确定元素。使用 .eq(-i) 的则是倒过来计数。
+  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#eq-i-)  
+  根据索引来确定元素。使用 .eq(-i) 的则是倒过来计数。  
   `args: [number]`
 - **text**
   [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#text-textstring-)
-  获取元素集合中的每个元素的合并文本内容，包括它们的后代
+  获取元素集合中的每个元素的合并文本内容，包括它们的后代  
   不需要`args`
 - **html**
   [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#html-htmlstring-)
-  获取第一个选中元素的 HTML 内容字符串
+  获取第一个选中元素的 HTML 内容字符串  
   不需要`args`
 - **map**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#map-functionindex-element--1)
-  通过每个在匹配函数产生的匹配集合中的匹配元素，产生一个新的包含返回值的 cheerio 对象。
-  该函数可以返回一个单独的数据项或一组数据项被插入到所得到的集合中。
-  如果返回一个数组，数组中的元素插入到集合中。
-  如果函数返回空或未定义，则将插入任何元素。
+  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#map-functionindex-element--1)  
+  通过每个在匹配函数产生的匹配集合中的匹配元素，产生一个新的包含返回值的 cheerio 对象。  
+  该函数可以返回一个单独的数据项或一组数据项被插入到所得到的集合中。  
+  如果返回一个数组，数组中的元素插入到集合中。  
+  如果函数返回空或未定义，则将插入任何元素。  
   `args: [Rules]`
