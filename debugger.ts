@@ -1,16 +1,44 @@
 import type { CrawlerOptions } from './src/types';
 import { crawl } from './src/index';
-const illegalMethodOptions: CrawlerOptions = {
-  url: 'https://www.baidu.com',
+
+const options: CrawlerOptions = {
+  url: 'https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest',
   rules: {
-    test: {
-      selector: '.cp-feedback',
-      // just test error
-      handlers: [{ method: 'aaa' as any }],
+    name: {
+      selector: '.ux-item-name',
+      handlers: [{ method: 'text' }, { method: 'trim' }],
+    },
+    author: {
+      selector: '.ux-item-publisher',
+      handlers: [{ method: 'text' }, { method: 'trim' }],
+    },
+    installs: {
+      selector: '.installs-text',
+      handlers: [
+        { method: 'text' },
+        { method: 'substring', args: [0, -9] },
+        { method: 'trim' },
+        { method: 'replace', args: [',', ''] },
+        { method: 'number' },
+      ],
+    },
+    tags: {
+      selector: '.meta-data-list-link',
+      handlers: [
+        {
+          method: 'map',
+          args: [
+            {
+              text: { handlers: [{ method: 'text' }] },
+              link: { handlers: [{ method: 'attr', args: ['href'] }, { method: 'resolveUrl' }] },
+            },
+          ],
+        },
+      ],
     },
   },
 };
 
-crawl(illegalMethodOptions).then((res) => {
-  console.log(res);
+crawl(options).then((res) => {
+  console.log(JSON.stringify(res));
 });

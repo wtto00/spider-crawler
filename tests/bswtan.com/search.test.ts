@@ -68,5 +68,6 @@ const emptyOptions: CrawlerOptions = {
 
 test('search books empty', () =>
   crawl(emptyOptions).then((res) => {
-    expect(res.code).toBe(ResultCodes.EMPTY);
+    expect(res.code).toBe(ResultCodes.SUCCESS);
+    expect(res.data['list']).toBe(null);
   }));

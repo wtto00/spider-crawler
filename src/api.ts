@@ -20,13 +20,14 @@ export default class Api {
     // 开始根据规则 解析
     Object.keys(rules).forEach((key) => {
       const rule = rules[key];
-      this.source = cheerioNode;
+      this.source = cheerioNode || $;
 
       // Rules
       if ('selector' in rule) {
         this.source = $(rule.selector);
         if (this.source.length === 0) {
-          throw new CrawlerError(ErrorCode.EMPTY);
+          this.results[key] = null;
+          return;
         }
       }
 
@@ -34,7 +35,7 @@ export default class Api {
       rule.handlers.forEach((handler) => {
         if (handler.method in Object.getPrototypeOf(this)) {
           if ('args' in handler) {
-            this.source = this[handler.method](...(handler.args as unknown as [never]));
+            this.source = this[handler.method](...(handler.args as unknown as [never, never]));
           } else {
             this.source = this[handler.method]();
           }
@@ -57,6 +58,29 @@ export default class Api {
   }
 
   /**
+   * 对字符串结果进行截取
+   * @param start 开始截取位置
+   * @param end 结束截取位置
+   * @returns
+   */
+  substring(start: number, end?: number) {
+    let endIndex = end ?? this.source.length;
+    if (endIndex < 0) endIndex = this.source.length + endIndex;
+    return (this.source as string).substring(start, endIndex);
+  }
+
+  /**
+   * 字符串全局替换
+   * @param searchValue 将要被替换的文本
+   * @param replaceValue 替换为
+   * @returns
+   */
+  replace(searchValue: string, replaceValue: string) {
+    const search = new RegExp(searchValue, 'g');
+    return (this.source as string).replace(search, replaceValue);
+  }
+
+  /**
    * 去除开头与结尾的空格
    * @returns
    */
@@ -70,6 +94,14 @@ export default class Api {
    */
   resolveUrl() {
     return new URL(this.source as string, this.url).href;
+  }
+
+  /**
+   * 把字符串转为数字
+   * @returns
+   */
+  number() {
+    return Number(this.source as string);
   }
 
   /**

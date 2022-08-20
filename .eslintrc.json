@@ -1,6 +1,6 @@
 {
   "env": {
-    "es2021": true,
+    "es6": true,
     "node": true
   },
   "extends": [
@@ -11,7 +11,7 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": "latest",
+    "ecmaVersion": 2015,
     "sourceType": "module",
     "tsconfigRootDir": "./",
     "project": ["./tsconfig.eslint.json"]

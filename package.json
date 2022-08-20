@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "build": "npm run build:cjs & npm run build:esm",
+    "build": "rm -rf dist && (npm run build:cjs & npm run build:esm)",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc",
     "format": "prettier --write .",
