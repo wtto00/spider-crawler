@@ -1,6 +1,6 @@
 import type { CrawlerOptions } from '../src/types';
-import { crawl } from '../src/index';
-import { ResultCodes } from '../src/result';
+import { crawl } from '../src/index.js';
+import { ResultCodes } from '../src/result.js';
 
 const prefixOptions: CrawlerOptions = {
   url: 'https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest',

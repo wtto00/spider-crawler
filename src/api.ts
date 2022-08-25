@@ -1,6 +1,6 @@
 import type { AnyNode, Cheerio, CheerioAPI } from 'cheerio';
-import type { Rules } from './types';
-import { CrawlerError, ErrorCode } from './result';
+import type { Rules } from './types.js';
+import { CrawlerError, ErrorCode } from './result.js';
 
 type CEle = Cheerio<AnyNode>;
 

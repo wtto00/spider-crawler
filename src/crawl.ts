@@ -1,8 +1,8 @@
 import { load } from 'cheerio';
-import Api from './api';
+import Api from './api.js';
 import type { CrawlerOptions } from './types';
-import request from './request';
-import { CrawlerError, CrawlerResult, ErrorCode } from './result';
+import request from './request.js';
+import { CrawlerError, CrawlerResult, ErrorCode } from './result.js';
 
 async function crawl(crawlerOptions: CrawlerOptions): Promise<CrawlerResult> {
   try {

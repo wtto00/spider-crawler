@@ -1,6 +1,6 @@
-import crawl from './crawl';
+import crawl from './crawl.js';
 export { crawl };
 
-export * from './types';
+export * from './types.js';
 
-export * from './result';
+export * from './result.js';

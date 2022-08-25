@@ -1,6 +1,6 @@
 import type { CrawlerOptions, Rules } from '../src/types';
-import { crawl } from '../src/index';
-import { ResultCodes } from '../src/result';
+import { crawl } from '../src/index.js';
+import { ResultCodes } from '../src/result.js';
 
 const requestErrorOptions: CrawlerOptions = {
   url: 'asdasda.dfadf',

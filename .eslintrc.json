@@ -18,6 +18,7 @@
   },
   "plugins": ["import", "@typescript-eslint"],
   "rules": {
+    "import/extensions": ["error", "ignorePackages", { "js": "never" }],
     "max-len": ["error", { "code": 120 }]
   }
 }

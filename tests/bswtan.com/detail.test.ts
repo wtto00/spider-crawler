@@ -1,6 +1,6 @@
-import { crawl } from '../../src';
+import { crawl } from '../../src/index.js';
 import type { CrawlerOptions } from '../../src/types';
-import { ResultCodes } from '../../src/result';
+import { ResultCodes } from '../../src/result.js';
 
 const detaliOptions: CrawlerOptions = {
   url: 'https://www.bswtan.com/7/7657/',
