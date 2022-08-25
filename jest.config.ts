@@ -15,7 +15,7 @@ const config: InitialOptionsTsJest = {
     },
   },
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.ts$': '$1',
+    '^(\\.{1,2}/.*)\\.[jt]s$': '$1',
   },
 };
 

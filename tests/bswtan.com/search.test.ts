@@ -1,6 +1,6 @@
 import type { CrawlerOptions } from '../../src/types';
-import { crawl } from '../../src';
-import { ResultCodes } from '../../src/result';
+import { crawl } from '../../src/index.js';
+import { ResultCodes } from '../../src/result.js';
 
 const searchOptions: CrawlerOptions = {
   url: 'https://www.bswtan.com/modules/article/search.php',

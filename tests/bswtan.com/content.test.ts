@@ -1,4 +1,4 @@
-import { crawl, CrawlerOptions, ResultCodes } from '../../src';
+import { crawl, CrawlerOptions, ResultCodes } from '../../src/index.js';
 
 const options: CrawlerOptions = {
   url: 'https://www.bswtan.com/7/7657/4846088.html',

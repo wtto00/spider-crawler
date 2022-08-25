@@ -1,4 +1,4 @@
-import { formatString } from './util';
+import { formatString } from './util.js';
 
 export enum ErrorCode {
   /** 未知的结果 */

@@ -2,11 +2,14 @@
   "compilerOptions": {
     "target": "ES2015",
     "useDefineForClassFields": true,
-    "module": "ESNext",
+    "module": "ES2015",
     "lib": ["ESNext", "DOM"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+
+    "baseUrl": ".",
+    "rootDir": "./src",
     "outDir": "dist/es",
 
     "strict": true,
