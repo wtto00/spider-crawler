@@ -14,7 +14,8 @@
   },
   "files": [
     "dist/es",
-    "dist/lib"
+    "dist/lib",
+    "dist/types"
   ],
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
@@ -27,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/wtto00/node-spider-crawler.git"
+    "url": "git+ssh://git@github.com/wtto00/spider-crawler.git"
   },
   "keywords": [
     "node",
@@ -37,9 +38,9 @@
   "author": "tato.wang <wtto00@outlook.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wtto00/node-spider-crawler/issues"
+    "url": "https://github.com/wtto00/spider-crawler/issues"
   },
-  "homepage": "https://github.com/wtto00/node-spider-crawler#readme",
+  "homepage": "https://github.com/wtto00/spider-crawler#readme",
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "node-fetch": "^3.2.10"
