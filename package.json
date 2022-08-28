@@ -4,7 +4,7 @@
   "description": "定义一个json格式的爬虫规则，Nodejs按照该规则爬取所需要的内容",
   "type": "module",
   "main": "dist/lib/index.js",
-  "types": "dist/lib/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "module": "dist/es/index.js",
   "exports": {
     ".": {

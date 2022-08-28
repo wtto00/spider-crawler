@@ -4,8 +4,6 @@
     "useDefineForClassFields": true,
     "module": "ES2015",
     "lib": ["ESNext", "DOM"],
-    "declaration": true,
-    "declarationMap": true,
     "sourceMap": true,
 
     "baseUrl": ".",
