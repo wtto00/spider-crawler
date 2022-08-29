@@ -1,8 +1,8 @@
-import type { CrawlerOptions } from '../src/types';
-import { crawl } from '../src/index.js';
+import type { CrawlerJsonOptions, CrawlerUrlOptions } from '../src/types';
+import { crawlFromJson, crawlFromUrl } from '../src/index.js';
 import { ResultCodes } from '../src/result.js';
 
-const prefixOptions: CrawlerOptions = {
+const prefixOptions: CrawlerUrlOptions = {
   url: 'https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest',
   rules: {
     emptyStr: {
@@ -23,8 +23,41 @@ const prefixOptions: CrawlerOptions = {
 };
 
 test('prefix substring replace number', () =>
-  crawl(prefixOptions).then((res) => {
+  crawlFromUrl(prefixOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
     expect(res.data['emptyStr']).toBe('prefix');
     expect(res.data['installers']).toBeGreaterThan(0);
   }));
+
+const jsonOptions: CrawlerJsonOptions = {
+  json: JSON.stringify({ test: '1' }),
+  rules: {
+    pickUndefined: {
+      selector: 'a.b',
+    },
+    selectorEmpty: {
+      selector: '',
+    },
+    quotePick: {
+      selector: 'a["b"]',
+    },
+    handlers: {
+      selector: 'test',
+      handlers: [{ method: 'number' }],
+    },
+    methodArgs: {
+      selector: 'test',
+      handlers: [{ method: 'prefix', args: ['2'] }],
+    },
+  },
+};
+
+test('json coverage', () => {
+  const res = crawlFromJson(jsonOptions);
+  console.log(res);
+
+  expect(res.code).toBe(ResultCodes.SUCCESS);
+  expect(res.data['pickUndefined']).toBe(undefined);
+  expect(res.data['selectorEmpty']).toEqual({ test: '1' });
+  expect(res.data['handlers']).toBe(1);
+});

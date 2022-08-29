@@ -1,5 +1,4 @@
-import crawl from './crawl.js';
-export { crawl };
+export * from './crawl.js';
 
 export * from './types.js';
 

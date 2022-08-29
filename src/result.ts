@@ -11,6 +11,8 @@ export enum ErrorCode {
   MISSURL = 103,
   /** 缺失爬取规则 */
   MISSRULES = 104,
+  /** 非法的JSON数据 */
+  ILLEGALJSON = 105,
 }
 export enum SuccessCode {
   SUCCESS = 0,
@@ -21,6 +23,7 @@ const errors: Record<ErrorCode, string> = {
   [ErrorCode.ILLEGALMETHOD]: '非法的解析方法:${method}',
   [ErrorCode.MISSURL]: '缺失请求url',
   [ErrorCode.MISSRULES]: '缺失爬取规则',
+  [ErrorCode.ILLEGALJSON]: '非法的JSON数据',
 };
 
 export class CrawlerError extends Error {
