@@ -1,48 +1,62 @@
-import type { AnyNode, Cheerio, CheerioAPI } from 'cheerio';
-import type { Rules } from './types.js';
+import type { AnyNode, Cheerio, CheerioAPI, Element } from 'cheerio';
+import type { JsonRules, Rules } from './types.js';
 import { CrawlerError, ErrorCode } from './result.js';
+import { pickObject } from './util.js';
 
 type CEle = Cheerio<AnyNode>;
 
-export default class Api {
-  private url: string;
+export abstract class CrawlerApi {
+  abstract prefix(str: string): string;
+  abstract substring(start: number, end?: number): string;
+  abstract replace(searchValue: string, replaceValue: string): string;
+  abstract trim(): string;
+  abstract number(): number;
+  abstract br2nl(): string;
+}
+export abstract class CheerioApi {
+  abstract resolveUrl(): string;
+  abstract decode(): string;
+  abstract attr(name?: string): string | Record<string, string>;
+  abstract find(selector: string): Cheerio<Element>;
+  abstract eq(index: number): Cheerio<AnyNode>;
+  abstract text(): string;
+  abstract html(): string | null;
+  abstract map(rules: Rules): Cheerio<any>;
+}
 
-  private $: CheerioAPI;
+export class JsonApi implements CrawlerApi {
+  protected source: any;
 
-  private source: any;
+  private input: any;
 
   results: Record<string, any> = {};
 
-  constructor(url: string, rules: Rules, $: CheerioAPI, cheerioNode?: CEle) {
-    this.url = url;
-    this.$ = $;
+  constructor(json: string, rules?: JsonRules) {
+    if (!json || !rules) return;
+    try {
+      this.input = JSON.parse(json);
+    } catch (error) {
+      throw new CrawlerError(ErrorCode.ILLEGALJSON);
+    }
 
-    // 开始根据规则 解析
     Object.keys(rules).forEach((key) => {
       const rule = rules[key];
-      this.source = cheerioNode || $;
-
-      // Rules
-      if ('selector' in rule) {
-        this.source = $(rule.selector);
-        if (this.source.length === 0) {
-          this.results[key] = null;
-          return;
-        }
-      }
+      this.source = pickObject(this.input, rule.selector);
 
       // Handlers
-      rule.handlers.forEach((handler) => {
-        if (handler.method in Object.getPrototypeOf(this)) {
-          if ('args' in handler) {
-            this.source = this[handler.method](...(handler.args as unknown as [never, never]));
+      if (rule.handlers) {
+        rule.handlers.forEach((handler) => {
+          if (handler.method in Object.getPrototypeOf(this)) {
+            if ('args' in handler) {
+              this.source = this[handler.method](...(handler.args as unknown as [never, never]));
+            } else {
+              this.source = this[handler.method]();
+            }
           } else {
-            this.source = this[handler.method]();
+            throw new CrawlerError(ErrorCode.ILLEGALMETHOD, { method: handler.method });
           }
-        } else {
-          throw new CrawlerError(ErrorCode.ILLEGALMETHOD, { method: handler.method });
-        }
-      });
+        });
+      }
 
       this.results[key] = this.source;
     });
@@ -89,14 +103,6 @@ export default class Api {
   }
 
   /**
-   * 获得的路径与当前请求地址相混合
-   * @returns
-   */
-  resolveUrl() {
-    return new URL(this.source as string, this.url).href;
-  }
-
-  /**
    * 把字符串转为数字
    * @returns
    */
@@ -111,6 +117,56 @@ export default class Api {
    */
   br2nl() {
     return (this.source as string).replace(/(<br\s?\/?>|\n)+((\s+\n+)|(\s+<br\s?\/?>+)|\n+|<br\s?\/?>+)*/gi, '\n\n');
+  }
+}
+
+export class Api extends JsonApi implements CheerioApi, CrawlerApi {
+  private url: string;
+
+  private $: CheerioAPI;
+
+  constructor(url: string, rules: Rules, $: CheerioAPI, cheerioNode?: CEle) {
+    super('');
+    this.url = url;
+    this.$ = $;
+
+    // 开始根据规则 解析
+    Object.keys(rules).forEach((key) => {
+      const rule = rules[key];
+      this.source = cheerioNode || $;
+
+      // Rules
+      if ('selector' in rule) {
+        this.source = $(rule.selector);
+        if (this.source.length === 0) {
+          this.results[key] = null;
+          return;
+        }
+      }
+
+      // Handlers
+      rule.handlers.forEach((handler) => {
+        if (handler.method in Object.getPrototypeOf(this)) {
+          if ('args' in handler) {
+            this.source = this[handler.method](...(handler.args as unknown as [never, never]));
+          } else {
+            this.source = this[handler.method]();
+          }
+        } else {
+          throw new CrawlerError(ErrorCode.ILLEGALMETHOD, { method: handler.method });
+        }
+      });
+
+      this.results[key] = this.source;
+    });
+  }
+
+  /**
+   * 获得的路径与当前请求地址相混合
+   * @returns
+   */
+  resolveUrl() {
+    return new URL(this.source as string, this.url).href;
   }
 
   /**

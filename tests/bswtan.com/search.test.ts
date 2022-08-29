@@ -1,10 +1,10 @@
-import type { CrawlerOptions } from '../../src/types';
-import { crawl } from '../../src/index.js';
+import type { CrawlerUrlOptions } from '../../src/types';
+import { crawlFromUrl } from '../../src/index.js';
 import { ResultCodes } from '../../src/result.js';
 
-const searchOptions: CrawlerOptions = {
+const searchOptions: CrawlerUrlOptions = {
   url: 'https://www.bswtan.com/modules/article/search.php',
-  options: {
+  fetchOptions: {
     method: 'POST',
     body: 'searchkey=灵境',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -52,14 +52,14 @@ const searchOptions: CrawlerOptions = {
 };
 
 test('search books', () =>
-  crawl(searchOptions).then((res) => {
+  crawlFromUrl(searchOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
     expect([...res.data['list']].length).toBeGreaterThan(0);
   }));
 
-const emptyOptions: CrawlerOptions = {
+const emptyOptions: CrawlerUrlOptions = {
   ...searchOptions,
-  options: {
+  fetchOptions: {
     method: 'POST',
     body: 'searchkey=1231232131',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -67,7 +67,7 @@ const emptyOptions: CrawlerOptions = {
 };
 
 test('search books empty', () =>
-  crawl(emptyOptions).then((res) => {
+  crawlFromUrl(emptyOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
     expect(res.data['list']).toBe(null);
   }));

@@ -1,6 +1,6 @@
-import { crawl, CrawlerOptions, ResultCodes } from '../../src/index.js';
+import { crawlFromUrl, CrawlerUrlOptions, ResultCodes } from '../../src/index.js';
 
-const options: CrawlerOptions = {
+const options: CrawlerUrlOptions = {
   url: 'https://www.bswtan.com/7/7657/4846088.html',
   rules: {
     title: {
@@ -23,7 +23,7 @@ const options: CrawlerOptions = {
 };
 
 test('book content', () => {
-  return crawl(options).then((res) => {
+  return crawlFromUrl(options).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
     expect(res.data['title']).toEqual('1、想等的人');
     expect(res.data['previousChapter']).toEqual('https://www.bswtan.com/7/7657/');

@@ -1,8 +1,8 @@
-import { crawl } from '../../src/index.js';
-import type { CrawlerOptions } from '../../src/types';
+import { crawlFromUrl } from '../../src/index.js';
+import type { CrawlerUrlOptions } from '../../src/types';
 import { ResultCodes } from '../../src/result.js';
 
-const detaliOptions: CrawlerOptions = {
+const detaliOptions: CrawlerUrlOptions = {
   url: 'https://www.bswtan.com/7/7657/',
   rules: {
     name: {
@@ -110,7 +110,7 @@ const detaliOptions: CrawlerOptions = {
 };
 
 test('book detail', () =>
-  crawl(detaliOptions).then((res) => {
+  crawlFromUrl(detaliOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
 
     expect(res.data['name']).toEqual('夜的命名术');
