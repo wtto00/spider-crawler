@@ -1,10 +1,8 @@
 # spider-crawler
 
-![coverage](https://img.shields.io/codecov/c/github/wtto00/spider-crawler/dev?token=EZWZMSVOM9)
+![coverage](https://img.shields.io/azure-devops/coverage/wtto00/spider-crawler/25/master)
 
 定义一个 json 格式的爬虫规则，Nodejs 按照该规则爬取所需要的内容
-
-For Nodejs v15+
 
 ## To Do
 
@@ -12,19 +10,27 @@ For Nodejs v15+
 - [x] url path resolve(fillUrl)
 - [x] class or function
 - [ ] selector fail callback
-- [ ] crawl json data
+- [x] crawl json data
 
 ## 使用
 
 ```javascript
-import { crawl } from '@wtto00/spider-crawler';
+import { crawlFromUrl, crawlFromJson, crawlFromHtml } from '@wtto00/spider-crawler';
 
-crawl(options).then((res) => {
+crawlFromUrl(urlOptions).then((res) => {
+  console.log(res);
+});
+crawlFromJson(jsonOptions).then((res) => {
+  console.log(res);
+});
+crawlFromHtml(htmlOptions).then((res) => {
   console.log(res);
 });
 ```
 
-## 举例
+## 示例
+
+#### crawlFromUrl
 
 ```javascript
 const options = {
@@ -65,12 +71,74 @@ const options = {
   },
 };
 
-crawl(options).then((res) => {
+crawlFromUrl(options).then((res) => {
   console.log(res);
 });
 
 // {"code":0,"message":"success","data":{"name":"Jest","author":"Orta","installs":1148080,"tags":null}}
 ```
+
+#### crawlFromJson
+
+```javascript
+const options = {
+  json: JSON.stringify({ test: '1' }),
+  rules: {
+    test: {
+      selector: 'test',
+      handlers: [{ method: 'number' }],
+    },
+  },
+};
+const res = crawlFromJson(jsonOptions);
+// {"code":0,"message":"success","data":{"test":1}}
+```
+
+#### crawlFromHtml
+
+```javascript
+const options = {
+  html: '<p class="test">content</p>',
+  rules: {
+    content: {
+      selector: '.test',
+      handlers: [{ method: 'text' }],
+    },
+  },
+};
+const res = crawlFromHtml(options);
+// {"code":0,"message":"success","data":{"content":"content"}}
+```
+
+## CrawlFromJson Options
+
+| 字段  | 类型                    | 备注         |
+| ----- | ----------------------- | ------------ |
+| json  | string                  | json 字符串  |
+| rules | [JsonRules](#JsonRules) | 取值处理规则 |
+
+### JsonRules
+
+```typescript
+type JsonRules = Record<string, JsonRule>;
+```
+
+#### JsonRule
+
+| 字段     | 类型                  | 必填 | 备注                                                     |
+| -------- | --------------------- | ---- | -------------------------------------------------------- |
+| selector | string                | 是   | [json 取值规则](https://www.lodashjs.com/docs/lodash.at) |
+| handlers | [Handler](#Handler)[] | 否   | 数据处理方法集合                                         |
+
+JsonRule 的 Handler 中的 Method，只有 `prefix`,`substring`,`replace`,`trim`,`number`,`br2nl`。其他处理方法为无效值。
+
+## CrawlFromHtml Options
+
+| 字段    | 类型            | 必填 | 备注                                  |
+| ------- | --------------- | ---- | ------------------------------------- |
+| baseUrl | string          | 否   | baseUrl 用于 html 中某些 url 属性处理 |
+| html    | string          | 是   | html 字符串                           |
+| rules   | [Rules](#Rules) | 是   | 取值处理规则                          |
 
 ## Options
 

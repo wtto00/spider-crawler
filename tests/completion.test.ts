@@ -54,7 +54,6 @@ const jsonOptions: CrawlerJsonOptions = {
 
 test('json coverage', () => {
   const res = crawlFromJson(jsonOptions);
-  console.log(res);
 
   expect(res.code).toBe(ResultCodes.SUCCESS);
   expect(res.data['pickUndefined']).toBe(undefined);

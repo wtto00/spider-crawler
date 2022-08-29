@@ -13,13 +13,13 @@ function catchError(error: Error) {
 
 export function crawlFromHtml(options: CrawlerHtmlOptions) {
   try {
-    const { html, url = '', rules } = options;
+    const { html, baseUrl = '', rules } = options;
 
     if (!html) throw new CrawlerError(ErrorCode.EMPTY);
 
     const $ = load(html);
 
-    const api = new Api(url, rules, $);
+    const api = new Api(baseUrl, rules, $);
 
     return new CrawlerResult(api.results);
   } catch (error) {
@@ -54,7 +54,7 @@ export async function crawlFromUrl(options: CrawlerUrlOptions): Promise<CrawlerR
       return crawlFromJson({ json: content, rules: options.rules });
     }
 
-    return crawlFromHtml({ html: content, url, rules: options.rules });
+    return crawlFromHtml({ html: content, baseUrl: url, rules: options.rules });
   } catch (error) {
     return catchError(error as Error);
   }

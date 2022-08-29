@@ -45,7 +45,7 @@ interface CrawlerUrlNoDataTypeOptions extends CrawlerUrlBaseOptions {
 export type CrawlerUrlOptions = AllCrawlerOptions[CrawlDataType] | CrawlerUrlNoDataTypeOptions;
 // ----- html -----
 export interface CrawlerHtmlOptions {
-  url?: string;
+  baseUrl?: string;
   html: string;
   rules: Rules;
 }
