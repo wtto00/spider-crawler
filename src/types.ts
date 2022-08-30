@@ -32,23 +32,25 @@ interface CrawlerUrlBaseOptions {
   url: string;
   fetchOptions?: RequestInit;
 }
-interface CrawlerOptionsType<T extends CrawlDataType> extends CrawlerUrlBaseOptions {
+export interface CrawlerOptionsType<T extends CrawlDataType> extends CrawlerUrlBaseOptions {
   dataType: T;
   rules: DataTypeRules[T];
 }
 type AllCrawlerOptions = {
   [K in CrawlDataType]: CrawlerOptionsType<K>;
 };
-interface CrawlerUrlNoDataTypeOptions extends CrawlerUrlBaseOptions {
+export interface CrawlerUrlNoDataTypeOptions extends CrawlerUrlBaseOptions {
   rules: Rules;
 }
 export type CrawlerUrlOptions = AllCrawlerOptions[CrawlDataType] | CrawlerUrlNoDataTypeOptions;
+
 // ----- html -----
 export interface CrawlerHtmlOptions {
   baseUrl?: string;
   html: string;
   rules: Rules;
 }
+
 // ----- json -----
 export type JsonMethod = keyof CrawlerApi;
 type AllJsonMethods = {
