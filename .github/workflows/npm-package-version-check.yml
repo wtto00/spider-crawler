@@ -1,0 +1,8 @@
+name: Package Version Check
+
+jobs:
+  publish-gpr:
+    runs-on: ubuntu-latest
+    steps:
+      # 检查npm包的版本号和本地packages.json的版本号是否重复
+      - uses: EndBug/version-check@v2.1.0
