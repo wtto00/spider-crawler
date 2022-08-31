@@ -13,7 +13,19 @@ jobs:
       - uses: actions/checkout@v2.4.2
       # 检查npm包的版本号和本地packages.json的版本号是否重复
       # https://github.com/marketplace/actions/version-check
-      - uses: EndBug/version-check@v2.1.0
-        # with:
-        #   file-url: https://unpkg.com/@wtto00/spider-crawler@latest/package.json
-        #   static-checking: localIsNew
+      - id: cpv
+        uses: PostHog/check-package-version@v2
+
+      - name: cpv output false
+        if: steps.cpv.outputs.is-new-version == 'false'
+        run: |
+          echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
+          echo "Published version: ${{ steps.cpv.outputs.published-version }}"
+          echo "Committed version is not a new version"
+          exit 1
+
+      - name: cpv output
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: |
+          echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
+          echo "Published version: ${{ steps.cpv.outputs.published-version }}"
