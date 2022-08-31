@@ -1,8 +1,6 @@
 name: Publish Ci
 
 on:
-  release:
-    types: [published]
 
 jobs:
   build:
