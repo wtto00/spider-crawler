@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
           echo "Published version: ${{ steps.cpv.outputs.published-version }}"
-          echo "Committed version is not a new version"
+          echo "Is new version: ${{ steps.cpv.outputs.is-new-version }}"
           exit 1
 
       - name: cpv output
