@@ -10,6 +10,7 @@ on:
 jobs:
   publish-gpr:
     runs-on: ubuntu-latest
+    name: Publish Package
     permissions:
       contents: read
       packages: write
