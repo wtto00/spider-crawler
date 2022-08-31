@@ -14,6 +14,6 @@ jobs:
       # 检查npm包的版本号和本地packages.json的版本号是否重复
       # https://github.com/marketplace/actions/version-check
       - uses: EndBug/version-check@v2.1.0
-        with:
-          file-url: https://unpkg.com/@wtto00/spider-crawler@latest/package.json
-          static-checking: localIsNew
+        # with:
+        #   file-url: https://unpkg.com/@wtto00/spider-crawler@latest/package.json
+        #   static-checking: localIsNew
