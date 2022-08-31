@@ -1,6 +1,6 @@
 # spider-crawler
 
-![coverage](https://img.shields.io/codecov/c/github/wtto00/spider-crawler/main) [![downloads](https://img.shields.io/npm/dm/@wtto00/spider-crawler)](https://www.npmjs.com/package/@wtto00/spider-crawler) ![license](https://img.shields.io/github/license/wtto00/spider-crawler)
+[![Lint & Test](https://github.com/wtto00/spider-crawler/actions/workflows/code-format-test.yml/badge.svg)](https://github.com/wtto00/spider-crawler/actions/workflows/code-format-test.yml) ![coverage](https://img.shields.io/codecov/c/github/wtto00/spider-crawler/main) [![downloads](https://img.shields.io/npm/dm/@wtto00/spider-crawler)](https://www.npmjs.com/package/@wtto00/spider-crawler) ![license](https://img.shields.io/github/license/wtto00/spider-crawler)
 
 定义一个 json 格式的爬虫规则，Nodejs 按照该规则爬取所需要的内容
 
