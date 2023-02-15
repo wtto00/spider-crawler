@@ -1,22 +1,15 @@
-import type { CrawlerJsonOptions } from './src/types.js';
-import { crawlFromJson } from './src/index.js';
+import { crawlFromUrl, CrawlerUrlOptions } from './src/index.js';
 
-const jsonOptions: CrawlerJsonOptions = {
-  json: JSON.stringify({}),
+const options: CrawlerUrlOptions = {
+  url: 'https://gitee.com/wtto00/badge-test/issues',
   rules: {
-    // pickUndefined: {
-    //   selector: 'a.b',
-    // },
-    // selectorEmpty: {
-    //   selector: '',
-    // },
-    quotePick: {
-      selector: "a['\nb']",
+    total: {
+      selector: '#git-issues-filters a.item div.label',
+      handlers: [{ method: 'each', args: [[{ method: 'number' }]] }, { method: 'sum' }],
     },
   },
 };
 
-crawlFromJson(jsonOptions);
-// .then((res) => {
-//   console.log(JSON.stringify(res));
-// });
+crawlFromUrl(options).then((res) => {
+  console.log(res.data);
+});

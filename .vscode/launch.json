@@ -20,8 +20,7 @@
       "request": "launch",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "disableOptimisticBPs": true,
-      "cwd": "/home/wtto/projects/github/wtto00/spider-crawler",
+      "cwd": "/home/wtto/projects/github/wtto00/node-spider-crawler",
       "runtimeExecutable": "npm",
       "args": [
         "run",

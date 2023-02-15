@@ -1,68 +1,77 @@
+import type { AnyNode, Cheerio, Element } from 'cheerio';
 import type { RequestInit } from 'node-fetch';
-import type { CheerioApi, CrawlerApi } from './api';
 
-type Apis = CheerioApi & CrawlerApi;
-export type Method = keyof Apis;
+export type CEle = Cheerio<AnyNode>;
 
+export abstract class CrawlerApi {
+  abstract prefix(str: string): string;
+  abstract substring(start: number, end?: number): string;
+  abstract replace(searchValue: string, replaceValue: string): string;
+  abstract trim(): string;
+  abstract number(): number;
+  abstract br2nl(): string;
+  abstract sum(): number;
+  abstract resolveUrl(): string;
+  abstract decode(): string;
+
+  abstract attr(name?: string): string | Record<string, string>;
+  abstract find(selector: string): Cheerio<Element>;
+  abstract eq(index: number): Cheerio<AnyNode>;
+  abstract text(): string;
+  abstract html(): string | null;
+  abstract map(rules: Rules): any[];
+  abstract each(handers: Handler[]): any[];
+}
+
+type Method =
+  | 'prefix'
+  | 'substring'
+  | 'replace'
+  | 'trim'
+  | 'number'
+  | 'br2nl'
+  | 'sum'
+  | 'resolveUrl'
+  | 'decode'
+  | 'attr'
+  | 'find'
+  | 'eq'
+  | 'text'
+  | 'html'
+  | 'map'
+  | 'each';
+
+export interface HandlerType<T extends Method> {
+  method: T;
+  args?: Parameters<CrawlerApi[T]>;
+}
 type AllMethods = {
-  [K in Method]: Parameters<Apis[K]> extends [] ? EmprtyHandlerType<K> : HandlerType<K>;
+  [K in Method]: HandlerType<K>;
 };
-interface EmprtyHandlerType<T extends Method> {
-  method: T;
-}
-interface HandlerType<T extends Method> {
-  method: T;
-  args: Parameters<Apis[T]>;
-}
+
 export type Handler = AllMethods[Method];
 
 export interface Rule {
   selector?: string;
-  handlers: Handler[];
+  dataType?: 'html' | 'json';
+  handlers?: Handler[];
 }
 
 export type Rules = Record<string, Rule>;
-// ----- url -----
-interface DataTypeRules {
-  html: Rules;
-  json: JsonRules;
-}
-export type CrawlDataType = keyof DataTypeRules;
-interface CrawlerUrlBaseOptions {
-  url: string;
-  fetchOptions?: RequestInit;
-}
-export interface CrawlerOptionsType<T extends CrawlDataType> extends CrawlerUrlBaseOptions {
-  dataType: T;
-  rules: DataTypeRules[T];
-}
-type AllCrawlerOptions = {
-  [K in CrawlDataType]: CrawlerOptionsType<K>;
-};
-export interface CrawlerUrlNoDataTypeOptions extends CrawlerUrlBaseOptions {
+
+export interface CrawlerJsonOptions {
+  json: string;
   rules: Rules;
 }
-export type CrawlerUrlOptions = AllCrawlerOptions[CrawlDataType] | CrawlerUrlNoDataTypeOptions;
-
-// ----- html -----
 export interface CrawlerHtmlOptions {
   baseUrl?: string;
   html: string;
   rules: Rules;
 }
 
-// ----- json -----
-export type JsonMethod = keyof CrawlerApi;
-type AllJsonMethods = {
-  [K in JsonMethod]: Parameters<Apis[K]> extends [] ? EmprtyHandlerType<K> : HandlerType<K>;
-};
-export type JsonHandler = AllJsonMethods[JsonMethod];
-export interface JsonRule {
-  selector: string;
-  handlers?: JsonHandler[];
-}
-export type JsonRules = Record<string, JsonRule>;
-export interface CrawlerJsonOptions {
-  json: string;
-  rules: JsonRules;
+export interface CrawlerUrlOptions {
+  url: string;
+  fetchOptions?: RequestInit;
+  dataType?: 'html' | 'json';
+  rules: Rules;
 }

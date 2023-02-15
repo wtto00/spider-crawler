@@ -1,5 +1,4 @@
-import { load } from 'cheerio';
-import { Api, JsonApi } from './api.js';
+import { Api } from './api.js';
 import type { CrawlerHtmlOptions, CrawlerJsonOptions, CrawlerUrlOptions } from './types';
 import request from './request.js';
 import { CrawlerError, CrawlerResult, ErrorCode } from './result.js';
@@ -17,9 +16,7 @@ export function crawlFromHtml(options: CrawlerHtmlOptions) {
 
     if (!html) throw new CrawlerError(ErrorCode.EMPTY);
 
-    const $ = load(html);
-
-    const api = new Api(baseUrl, rules, $);
+    const api = new Api({ url: baseUrl, rules, source: html });
 
     return new CrawlerResult(api.results);
   } catch (error) {
@@ -33,7 +30,7 @@ export function crawlFromJson(options: CrawlerJsonOptions) {
 
     if (!json) throw new CrawlerError(ErrorCode.EMPTY);
 
-    const api = new JsonApi(json, rules);
+    const api = new Api({ source: json, rules, dataType: 'json' });
 
     return new CrawlerResult(api.results);
   } catch (error) {
