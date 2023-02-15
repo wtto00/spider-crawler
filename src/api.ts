@@ -10,7 +10,7 @@ export abstract class CrawlerApi {
   abstract substring(start: number, end?: number): string;
   abstract replace(searchValue: string, replaceValue: string): string;
   abstract trim(): string;
-  abstract number(): number;
+  abstract number(defaultNumber?: number): number;
   abstract br2nl(): string;
 }
 export abstract class CheerioApi {
@@ -106,8 +106,8 @@ export class JsonApi implements CrawlerApi {
    * 把字符串转为数字
    * @returns
    */
-  number() {
-    return Number(this.source as string);
+  number(defaultNumber?: number) {
+    return Number(this.source as string) || defaultNumber || 0;
   }
 
   /**
