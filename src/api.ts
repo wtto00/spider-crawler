@@ -1,64 +1,105 @@
-import type { AnyNode, Cheerio, CheerioAPI, Element } from 'cheerio';
-import type { JsonRules, Rules } from './types.js';
-import { CrawlerError, ErrorCode } from './result.js';
-import { pickObject } from './util.js';
+import { AnyNode, CheerioAPI, load } from 'cheerio';
+import { CrawlerError, ErrorCode } from './result';
+import type { CEle, CrawlerApi, Handler, Rules } from './types';
+import { pickObject } from './util';
 
-type CEle = Cheerio<AnyNode>;
-
-export abstract class CrawlerApi {
-  abstract prefix(str: string): string;
-  abstract substring(start: number, end?: number): string;
-  abstract replace(searchValue: string, replaceValue: string): string;
-  abstract trim(): string;
-  abstract number(): number;
-  abstract br2nl(): string;
-}
-export abstract class CheerioApi {
-  abstract resolveUrl(): string;
-  abstract decode(): string;
-  abstract attr(name?: string): string | Record<string, string>;
-  abstract find(selector: string): Cheerio<Element>;
-  abstract eq(index: number): Cheerio<AnyNode>;
-  abstract text(): string;
-  abstract html(): string | null;
-  abstract map(rules: Rules): Cheerio<any>;
+interface CrawlerOptions {
+  url?: string;
+  rules: Rules;
+  source: CEle | string;
+  dataType?: 'html' | 'json';
+  $?: CheerioAPI;
 }
 
-export class JsonApi implements CrawlerApi {
+export class Api implements CrawlerApi {
+  /**
+   * 输入字符串：json或者html或者AnyNode
+   */
   protected source: any;
 
-  private input: any;
+  /**
+   * 处理中间变量
+   */
+  private processVar: any;
 
+  /**
+   * 结果对象
+   */
   results: Record<string, any> = {};
 
-  constructor(json: string, rules?: JsonRules) {
-    if (!json || !rules) return;
-    try {
-      this.input = JSON.parse(json);
-    } catch (error) {
-      throw new CrawlerError(ErrorCode.ILLEGALJSON);
+  /**
+   * 基准url
+   */
+  private url: string | undefined;
+
+  /**
+   * CheerioAPI
+   */
+  private $: CheerioAPI | undefined;
+
+  constructor(options: CrawlerOptions) {
+    const { url, source, dataType = 'html', rules, $ } = options;
+    if (!rules || !source) return;
+
+    this.url = url;
+
+    if (dataType === 'json') {
+      try {
+        this.source = JSON.parse(source as string);
+      } catch (error) {
+        throw new CrawlerError(ErrorCode.ILLEGALJSON);
+      }
+    } else {
+      this.source = source;
+      this.$ = $ || load(source as string);
     }
 
     Object.keys(rules).forEach((key) => {
       const rule = rules[key];
-      this.source = pickObject(this.input, rule.selector);
 
-      // Handlers
-      if (rule.handlers) {
-        rule.handlers.forEach((handler) => {
+      if (dataType === 'json' || rule.dataType === 'json') {
+        /**
+         * json
+         */
+        if (rule.selector) {
+          this.processVar = pickObject(this.source, rule.selector);
+        } else {
+          this.processVar = this.source;
+        }
+
+        (rule.handlers || []).forEach((handler) => {
           if (handler.method in Object.getPrototypeOf(this)) {
-            if ('args' in handler) {
-              this.source = this[handler.method](...(handler.args as unknown as [never, never]));
-            } else {
-              this.source = this[handler.method]();
-            }
+            const args = (handler.args || []) as unknown as [never, never];
+            this.processVar = this[handler.method](...args);
+          } else {
+            throw new CrawlerError(ErrorCode.ILLEGALMETHOD, { method: handler.method });
+          }
+        });
+      } else {
+        /**
+         * html
+         */
+        if (typeof source !== 'string') this.processVar = source;
+
+        if (rule.selector) {
+          this.processVar = (this.$ as CheerioAPI)(rule.selector);
+          if (this.processVar.length === 0) {
+            this.results[key] = null;
+            return;
+          }
+        }
+
+        (rule.handlers || []).forEach((handler) => {
+          if (handler.method in Object.getPrototypeOf(this)) {
+            const args = (handler.args || []) as unknown as [never, never];
+            this.processVar = this[handler.method](...args);
           } else {
             throw new CrawlerError(ErrorCode.ILLEGALMETHOD, { method: handler.method });
           }
         });
       }
 
-      this.results[key] = this.source;
+      this.results[key] = this.processVar;
     });
   }
 
@@ -68,7 +109,7 @@ export class JsonApi implements CrawlerApi {
    * @returns
    */
   prefix(str: string) {
-    return `${str || ''}${this.source as string}`;
+    return `${str || ''}${this.processVar as string}`;
   }
 
   /**
@@ -78,9 +119,9 @@ export class JsonApi implements CrawlerApi {
    * @returns
    */
   substring(start: number, end?: number) {
-    let endIndex = end ?? this.source.length;
-    if (endIndex < 0) endIndex = this.source.length + endIndex;
-    return (this.source as string).substring(start, endIndex);
+    let endIndex = end ?? this.processVar.length;
+    if (endIndex < 0) endIndex = this.processVar.length + endIndex;
+    return (this.processVar as string).substring(start, endIndex);
   }
 
   /**
@@ -91,7 +132,7 @@ export class JsonApi implements CrawlerApi {
    */
   replace(searchValue: string, replaceValue: string) {
     const search = new RegExp(searchValue, 'g');
-    return (this.source as string).replace(search, replaceValue);
+    return (this.processVar as string).replace(search, replaceValue);
   }
 
   /**
@@ -99,7 +140,7 @@ export class JsonApi implements CrawlerApi {
    * @returns
    */
   trim() {
-    return (this.source as string).trim();
+    return (this.processVar as string).trim();
   }
 
   /**
@@ -107,7 +148,7 @@ export class JsonApi implements CrawlerApi {
    * @returns
    */
   number() {
-    return Number(this.source as string);
+    return Number(this.processVar as string) || 0;
   }
 
   /**
@@ -116,49 +157,22 @@ export class JsonApi implements CrawlerApi {
    * @returns
    */
   br2nl() {
-    return (this.source as string).replace(/(<br\s?\/?>|\n)+((\s+\n+)|(\s+<br\s?\/?>+)|\n+|<br\s?\/?>+)*/gi, '\n\n');
+    return (this.processVar as string).replace(
+      /(<br\s?\/?>|\n)+((\s+\n+)|(\s+<br\s?\/?>+)|\n+|<br\s?\/?>+)*/gi,
+      '\n\n',
+    );
   }
-}
 
-export class Api extends JsonApi implements CheerioApi, CrawlerApi {
-  private url: string;
-
-  private $: CheerioAPI;
-
-  constructor(url: string, rules: Rules, $: CheerioAPI, cheerioNode?: CEle) {
-    super('');
-    this.url = url;
-    this.$ = $;
-
-    // 开始根据规则 解析
-    Object.keys(rules).forEach((key) => {
-      const rule = rules[key];
-      this.source = cheerioNode || $;
-
-      // Rules
-      if ('selector' in rule) {
-        this.source = $(rule.selector);
-        if (this.source.length === 0) {
-          this.results[key] = null;
-          return;
-        }
-      }
-
-      // Handlers
-      rule.handlers.forEach((handler) => {
-        if (handler.method in Object.getPrototypeOf(this)) {
-          if ('args' in handler) {
-            this.source = this[handler.method](...(handler.args as unknown as [never, never]));
-          } else {
-            this.source = this[handler.method]();
-          }
-        } else {
-          throw new CrawlerError(ErrorCode.ILLEGALMETHOD, { method: handler.method });
-        }
-      });
-
-      this.results[key] = this.source;
+  /**
+   * 把一组数据转换为数字并相加，非数字自动忽略
+   * @returns
+   */
+  sum() {
+    let total = 0;
+    (this.processVar as string[]).forEach((item: string) => {
+      total += Number(item) || 0;
     });
+    return total;
   }
 
   /**
@@ -166,7 +180,7 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
    * @returns
    */
   resolveUrl() {
-    return new URL(this.source as string, this.url).href;
+    return new URL(this.processVar as string, this.url).href;
   }
 
   /**
@@ -175,8 +189,8 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
    * @returns
    */
   decode() {
-    return this.$('<div />')
-      .html(this.source as string)
+    return (this.$ as CheerioAPI)('<div />')
+      .html(this.processVar as string)
       .text();
   }
 
@@ -188,8 +202,8 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
   attr(): Record<string, string>;
   attr(name: string): string;
   attr(name?: string): string | Record<string, string> {
-    if (name) return (this.source as CEle).attr(name) || '';
-    return (this.source as CEle).attr() || {};
+    if (name) return (this.processVar as CEle).attr(name) || '';
+    return (this.processVar as CEle).attr() || {};
   }
 
   /**
@@ -198,7 +212,7 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
    * @returns
    */
   find(selector: string) {
-    return (this.source as CEle).find(selector || '');
+    return (this.processVar as CEle).find(selector || '');
   }
 
   /**
@@ -207,7 +221,7 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
    * @returns
    */
   eq(index: number) {
-    return (this.source as CEle).eq(index);
+    return (this.processVar as CEle).eq(index);
   }
 
   /**
@@ -215,7 +229,7 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
    * @returns
    */
   text() {
-    return (this.source as CEle).text();
+    return (this.processVar as CEle).text();
   }
 
   /**
@@ -223,11 +237,11 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
    * @returns
    */
   html() {
-    return (this.source as CEle).html();
+    return (this.processVar as CEle).html();
   }
 
   /**
-   * 通过每个在匹配函数产生的匹配集合中的匹配元素，产生一个新的包含返回值的cheerio对象。
+   * 通过每个在匹配函数产生的匹配集合中的匹配元素，产生一个新的包含返回值的数组。
    * 该函数可以返回一个单独的数据项或一组数据项被插入到所得到的集合中。
    * 如果返回一个数组，数组中的元素插入到集合中。
    * 如果函数返回空或未定义，则将插入任何元素。
@@ -235,9 +249,36 @@ export class Api extends JsonApi implements CheerioApi, CrawlerApi {
    * @returns
    */
   map(rules: Rules) {
-    return (this.source as CEle).map((_: number, eleItem: AnyNode) => {
-      const api = new Api(this.url, rules, this.$, this.$(eleItem));
-      return api.results;
+    return (this.processVar as CEle)
+      .map((_: number, eleItem: AnyNode) => {
+        const api = new Api({
+          url: this.url,
+          rules,
+          $: this.$,
+          source: (this.$ as CheerioAPI)(eleItem),
+        });
+        return api.results;
+      })
+      .toArray();
+  }
+
+  /**
+   * 对一个cheerio对象循环进行一些处理，得到一个新的数组。
+   * 此方法与 map 方法的不同在于，map 总是返回一个对象数组，而 each 不一定返回对象数组。
+   * @param handlers 循环处理的方法集合
+   * @returns
+   */
+  each(handlers: Handler[]) {
+    const res: any[] = [];
+    (this.processVar as CEle).each((_: number, eleItem: AnyNode) => {
+      const api = new Api({
+        url: this.url,
+        rules: { temp: { handlers } },
+        $: this.$,
+        source: (this.$ as CheerioAPI)(eleItem),
+      });
+      res.push(api.results?.['temp']);
     });
+    return res;
   }
 }

@@ -7,7 +7,7 @@ const searchOptions: CrawlerUrlOptions = {
   fetchOptions: {
     method: 'POST',
     body: 'searchkey=灵境',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.info' },
   },
   rules: {
     list: {
@@ -62,7 +62,7 @@ const emptyOptions: CrawlerUrlOptions = {
   fetchOptions: {
     method: 'POST',
     body: 'searchkey=1231232131',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.info' },
   },
 };
 

@@ -1,5 +1,5 @@
-import type { CrawlerJsonOptions, CrawlerUrlOptions } from '../src/types';
-import { crawlFromJson, crawlFromUrl } from '../src/index.js';
+import type { CrawlerUrlOptions } from '../src/types';
+import { crawlFromUrl } from '../src/index.js';
 import { ResultCodes } from '../src/result.js';
 
 const prefixOptions: CrawlerUrlOptions = {
@@ -28,35 +28,3 @@ test('prefix substring replace number', () =>
     expect(res.data['emptyStr']).toBe('prefix');
     expect(res.data['installers']).toBeGreaterThan(0);
   }));
-
-const jsonOptions: CrawlerJsonOptions = {
-  json: JSON.stringify({ test: '1' }),
-  rules: {
-    pickUndefined: {
-      selector: 'a.b',
-    },
-    selectorEmpty: {
-      selector: '',
-    },
-    quotePick: {
-      selector: 'a["b"]',
-    },
-    handlers: {
-      selector: 'test',
-      handlers: [{ method: 'number' }],
-    },
-    methodArgs: {
-      selector: 'test',
-      handlers: [{ method: 'prefix', args: ['2'] }],
-    },
-  },
-};
-
-test('json coverage', () => {
-  const res = crawlFromJson(jsonOptions);
-
-  expect(res.code).toBe(ResultCodes.SUCCESS);
-  expect(res.data['pickUndefined']).toBe(undefined);
-  expect(res.data['selectorEmpty']).toEqual({ test: '1' });
-  expect(res.data['handlers']).toBe(1);
-});

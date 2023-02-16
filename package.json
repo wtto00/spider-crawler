@@ -1,6 +1,6 @@
 {
   "name": "@wtto00/spider-crawler",
-  "version": "0.1.1-beta.1",
+  "version": "0.2.0-beta",
   "description": "定义一个json格式的爬虫规则，Nodejs按照该规则爬取所需要的内容",
   "type": "module",
   "main": "dist/lib/index.js",
@@ -29,9 +29,6 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/wtto00/spider-crawler.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "node",
