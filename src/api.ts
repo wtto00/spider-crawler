@@ -1,7 +1,7 @@
 import { AnyNode, CheerioAPI, load } from 'cheerio';
-import { CrawlerError, ErrorCode } from './result';
-import type { CEle, CrawlerApi, Handler, Rules } from './types';
-import { pickObject } from './util';
+import { CrawlerError, ErrorCode } from './result.js';
+import type { CEle, CrawlerApi, Handler, Rules } from './types.js';
+import { pickObject } from './util.js';
 
 interface CrawlerOptions {
   url?: string;
