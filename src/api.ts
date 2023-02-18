@@ -1,13 +1,13 @@
 import { AnyNode, CheerioAPI, load } from 'cheerio';
 import { CrawlerError, ErrorCode } from './result.js';
-import type { CEle, CrawlerApi, Handler, Rules } from './types.js';
+import type { CEle, CrawlerApi, DataType, Handler, Rules } from './types.js';
 import { pickObject } from './util.js';
 
 interface CrawlerOptions {
   url?: string;
   rules: Rules;
   source: CEle | string;
-  dataType?: 'html' | 'json';
+  dataType?: DataType;
   $?: CheerioAPI;
 }
 
