@@ -152,64 +152,21 @@ interface Handler {
 
 下边列举所有的可以方法以及相对应的参数
 
-- **prefix**  
-  字符串开头添加字符串  
-  `args: [string]`
-- **substring**  
-  对字符串结果进行截取  
-  `args: [number,?number]`
-- **replace**  
-  字符串全局替换  
-  `args: [string,string]`
-- **trim**  
-  去除开头与结尾的空格  
-  不需要`args`
-- **number**  
-  把字符串转为数字  
-  不需要`args`
-- **br2nl**  
-  把 `html` 中的 `br` 替换成文本换行符`\n`  
-  匹配`<br />,<br/><br >,<br>`以及其中的空格以及`\n`换行符  
-  不需要`args`
-- **sum**  
-  把字符串数组转为数字后相加  
-  不需要`args`
-- **resolveUrl**  
-  获得的路径与当前请求地址相混合  
-  不需要`args`
-- **decode**  
-  html 字符串反序列化到正常的阅读文本  
-  不需要`args`
-- **attr**  
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#attr-name-value--1)  
-  获取属性的方法。  
-  在匹配集合中只能获取的第一个元素的属性值。  
-  `args?: [string]`
-- **find**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#findselector)  
-  通过选择器、jQuery 对象或元素来过滤，获取每个匹配元素的后代。  
-  `args: [string]`
-- **eq**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#eq-i-)  
-  根据索引来确定元素。使用 .eq(-i) 的则是倒过来计数。  
-  `args: [number]`
-- **text**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#text-textstring-)  
-  获取元素集合中的每个元素的合并文本内容，包括它们的后代  
-  不需要`args`
-- **html**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#html-htmlstring-)  
-  获取第一个选中元素的 HTML 内容字符串  
-  不需要`args`
-- **map**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#map-functionindex-element--1)  
-  通过每个在匹配函数产生的匹配集合中的匹配元素，产生一个新的包含返回值的数组。  
-  该函数可以返回一个单独的数据项或一组数据项被插入到所得到的集合中。  
-  如果返回一个数组，数组中的元素插入到集合中。  
-  如果函数返回空或未定义，则将插入任何元素。  
-  `args: [Rules]`
-- **each**
-  [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#each-functionindex-element-)  
-  对一个 cheerio 对象循环进行一些处理，得到一个新的数组。  
-  此方法与 map 方法的不同在于，map 总是返回一个对象数组，而 each 不一定返回对象数组。
-  `args: [Handler[]]`
+| 方法`Method` | 参数`args`              | 说明                                                                                                                                                                                                                                                                                                                                                              |
+| ------------ | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| prefix       | (string)                | 字符串开头添加字符串                                                                                                                                                                                                                                                                                                                                              |
+| substring    | (number,?number)        | 对字符串结果进行截取                                                                                                                                                                                                                                                                                                                                              |
+| replace      | (string,string)         | 字符串全局替换                                                                                                                                                                                                                                                                                                                                                    |
+| trim         | -                       | 去除开头与结尾的空格                                                                                                                                                                                                                                                                                                                                              |
+| number       | -                       | 把字符串转为数字，转换失败时默认为 0                                                                                                                                                                                                                                                                                                                              |
+| br2nl        | -                       | 把 `html` 中的 `br` 替换成文本换行符`\n`（匹配`<br />,<br/><br >,<br>`以及其中的空格以及`\n`换行符）                                                                                                                                                                                                                                                              |
+| sum          | -                       | 把字符串数组转为数字后相加                                                                                                                                                                                                                                                                                                                                        |
+| resolveUrl   | -                       | 获得的路径与当前请求地址相混合                                                                                                                                                                                                                                                                                                                                    |
+| decode       | -                       | html 字符串反序列化到正常的阅读文本                                                                                                                                                                                                                                                                                                                               |
+| attr         | (?string)               | [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#attr-name-value--1)<br />获取属性的方法。<br />在匹配集合中只能获取的第一个元素的属性值。                                                                                                                                                                                                 |
+| find         | (string,?string)        | [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#findselector)<br />通过选择器、jQuery 对象或元素来过滤，获取每个匹配元素的后代。<br />对于对象数组来说，可以通过选择每一个对象的某个值来比较，从而选中匹配的那一项对象                                                                                                                    |
+| eq           | (number)                | [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#eq-i-)<br />根据索引来确定元素。使用 .eq(-i) 的则是倒过来计数。                                                                                                                                                                                                                           |
+| text         | -                       | [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#text-textstring-)<br />获取元素集合中的每个元素的合并文本内容，包括它们的后代                                                                                                                                                                                                             |
+| html         | -                       | [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#html-htmlstring-)<br />获取第一个选中元素的 HTML 内容字符串                                                                                                                                                                                                                               |
+| map          | ([Rules](#Rules))       | [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#map-functionindex-element--1)<br/>通过每个在匹配函数产生的匹配集合中的匹配元素，产生一个新的包含返回值的数组。<br />该函数可以返回一个单独的数据项或一组数据项被插入到所得到的集合中。 <br />如果返回一个数组，数组中的元素插入到集合中。<br />如果函数返回空或未定义，则将插入任何元素。 |
+| each         | ([Handler](#Handler)[]) | [cheerio 方法](https://github.com/cheeriojs/cheerio/wiki/Chinese-README#each-functionindex-element-)<br />对一个 cheerio 对象循环进行一些处理，得到一个新的数组。<br />此方法与 map 方法的不同在于，map 总是返回一个对象数组，而 each 不一定返回对象数组。                                                                                                        |

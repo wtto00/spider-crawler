@@ -10,7 +10,7 @@ const searchOptions: CrawlerUrlOptions = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.info' },
   },
   rules: {
-    list: {
+    book: {
       selector: '#main>.grid>tbody>tr:nth-child(n+2)',
       handlers: [
         {
@@ -46,6 +46,7 @@ const searchOptions: CrawlerUrlOptions = {
             },
           ],
         },
+        { method: 'find', args: ['name', '灵境行者'] },
       ],
     },
   },
@@ -54,7 +55,7 @@ const searchOptions: CrawlerUrlOptions = {
 test('search books', () =>
   crawlFromUrl(searchOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
-    expect([...res.data['list']].length).toBeGreaterThan(0);
+    expect(res.data['book'].name).toBe('灵境行者');
   }));
 
 const emptyOptions: CrawlerUrlOptions = {
@@ -69,5 +70,5 @@ const emptyOptions: CrawlerUrlOptions = {
 test('search books empty', () =>
   crawlFromUrl(emptyOptions).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
-    expect(res.data['list']).toBe(null);
+    expect(res.data['book']).toBe(null);
   }));

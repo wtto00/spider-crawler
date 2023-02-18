@@ -1,15 +1,58 @@
 import { crawlFromUrl, CrawlerUrlOptions } from './src/index.js';
 
 const options: CrawlerUrlOptions = {
-  url: 'https://gitee.com/wtto00/badge-test/issues',
+  url: 'https://www.bswtan.com/modules/article/search.php',
+  fetchOptions: {
+    method: 'POST',
+    body: 'searchkey=灵境',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.info' },
+  },
   rules: {
-    total: {
-      selector: '#git-issues-filters a.item div.label',
-      handlers: [{ method: 'each', args: [[{ method: 'number' }]] }, { method: 'sum' }],
+    list: {
+      selector: '#main>.grid>tbody>tr:nth-child(n+2)',
+      handlers: [
+        {
+          method: 'map',
+          args: [
+            {
+              name: {
+                handlers: [{ method: 'find', args: ['td:nth-child(1)'] }, { method: 'text' }, { method: 'trim' }],
+              },
+              bookUrl: {
+                handlers: [
+                  { method: 'find', args: ['td:nth-child(1)>a'] },
+                  { method: 'attr', args: ['href'] },
+                  { method: 'prefix', args: ['https://www.bswtan.com'] },
+                ],
+              },
+              latestChapterName: {
+                handlers: [{ method: 'find', args: ['td:nth-child(2)'] }, { method: 'text' }, { method: 'trim' }],
+              },
+              latestChapterUrl: {
+                handlers: [
+                  { method: 'find', args: ['td:nth-child(2)>span>a'] },
+                  { method: 'attr', args: ['href'] },
+                  { method: 'prefix', args: ['https://www.bswtan.com'] },
+                ],
+              },
+              author: {
+                handlers: [{ method: 'find', args: ['td:nth-child(3)'] }, { method: 'text' }, { method: 'trim' }],
+              },
+              updateTime: {
+                handlers: [{ method: 'find', args: ['td:nth-child(4)'] }, { method: 'text' }, { method: 'trim' }],
+              },
+            },
+          ],
+        },
+        {
+          method: 'find',
+          args: ['name', '灵境行者'],
+        },
+      ],
     },
   },
 };
 
 crawlFromUrl(options).then((res) => {
-  console.log(res.data);
+  console.log(JSON.stringify(res.data));
 });

@@ -3,6 +3,8 @@ import type { RequestInit } from 'node-fetch';
 
 export type CEle = Cheerio<AnyNode>;
 
+export type DataType = 'html' | 'json';
+
 export abstract class CrawlerApi {
   abstract prefix(str: string): string;
   abstract substring(start: number, end?: number): string;
@@ -15,7 +17,7 @@ export abstract class CrawlerApi {
   abstract decode(): string;
 
   abstract attr(name?: string): string | Record<string, string>;
-  abstract find(selector: string): Cheerio<Element>;
+  abstract find(selector: string, target?: string): Cheerio<Element> | object;
   abstract eq(index: number): Cheerio<AnyNode>;
   abstract text(): string;
   abstract html(): string | null;
@@ -53,7 +55,7 @@ export type Handler = AllMethods[Method];
 
 export interface Rule {
   selector?: string;
-  dataType?: 'html' | 'json';
+  dataType?: DataType;
   handlers?: Handler[];
 }
 
@@ -72,6 +74,6 @@ export interface CrawlerHtmlOptions {
 export interface CrawlerUrlOptions {
   url: string;
   fetchOptions?: RequestInit;
-  dataType?: 'html' | 'json';
+  dataType?: DataType;
   rules: Rules;
 }

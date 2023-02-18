@@ -1,13 +1,13 @@
 import { AnyNode, CheerioAPI, load } from 'cheerio';
 import { CrawlerError, ErrorCode } from './result.js';
-import type { CEle, CrawlerApi, Handler, Rules } from './types.js';
-import { pickObject } from './util.js';
+import type { CEle, CrawlerApi, DataType, Handler, Rules } from './types.js';
+import { isCheerio, pickObject } from './util.js';
 
 interface CrawlerOptions {
   url?: string;
   rules: Rules;
   source: CEle | string;
-  dataType?: 'html' | 'json';
+  dataType?: DataType;
   $?: CheerioAPI;
 }
 
@@ -109,7 +109,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   prefix(str: string) {
-    return `${str || ''}${this.processVar as string}`;
+    if (typeof this.processVar !== 'string') return '';
+    return `${str || ''}${this.processVar}`;
   }
 
   /**
@@ -119,9 +120,10 @@ export class Api implements CrawlerApi {
    * @returns
    */
   substring(start: number, end?: number) {
+    if (typeof this.processVar !== 'string') return '';
     let endIndex = end ?? this.processVar.length;
     if (endIndex < 0) endIndex = this.processVar.length + endIndex;
-    return (this.processVar as string).substring(start, endIndex);
+    return this.processVar.substring(start, endIndex);
   }
 
   /**
@@ -131,8 +133,9 @@ export class Api implements CrawlerApi {
    * @returns
    */
   replace(searchValue: string, replaceValue: string) {
+    if (typeof this.processVar !== 'string') return '';
     const search = new RegExp(searchValue, 'g');
-    return (this.processVar as string).replace(search, replaceValue);
+    return this.processVar.replace(search, replaceValue);
   }
 
   /**
@@ -140,7 +143,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   trim() {
-    return (this.processVar as string).trim();
+    if (typeof this.processVar !== 'string') return '';
+    return this.processVar.trim();
   }
 
   /**
@@ -148,7 +152,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   number() {
-    return Number(this.processVar as string) || 0;
+    if (typeof this.processVar !== 'string') return 0;
+    return Number(this.processVar) || 0;
   }
 
   /**
@@ -157,10 +162,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   br2nl() {
-    return (this.processVar as string).replace(
-      /(<br\s?\/?>|\n)+((\s+\n+)|(\s+<br\s?\/?>+)|\n+|<br\s?\/?>+)*/gi,
-      '\n\n',
-    );
+    if (typeof this.processVar !== 'string') return '';
+    return this.processVar.replace(/(<br\s?\/?>|\n)+((\s+\n+)|(\s+<br\s?\/?>+)|\n+|<br\s?\/?>+)*/gi, '\n\n');
   }
 
   /**
@@ -168,8 +171,9 @@ export class Api implements CrawlerApi {
    * @returns
    */
   sum() {
+    if (!Array.isArray(this.processVar)) return 0;
     let total = 0;
-    (this.processVar as string[]).forEach((item: string) => {
+    this.processVar.forEach((item: any) => {
       total += Number(item) || 0;
     });
     return total;
@@ -180,7 +184,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   resolveUrl() {
-    return new URL(this.processVar as string, this.url).href;
+    if (typeof this.processVar !== 'string') return '';
+    return new URL(this.processVar, this.url).href;
   }
 
   /**
@@ -189,9 +194,9 @@ export class Api implements CrawlerApi {
    * @returns
    */
   decode() {
-    return (this.$ as CheerioAPI)('<div />')
-      .html(this.processVar as string)
-      .text();
+    if (!isCheerio(this.$) || !this.$) return this.processVar;
+    if (typeof this.processVar !== 'string') return '';
+    return this.$('<div />').html(this.processVar).text();
   }
 
   /**
@@ -202,17 +207,24 @@ export class Api implements CrawlerApi {
   attr(): Record<string, string>;
   attr(name: string): string;
   attr(name?: string): string | Record<string, string> {
-    if (name) return (this.processVar as CEle).attr(name) || '';
-    return (this.processVar as CEle).attr() || {};
+    if (!isCheerio(this.processVar)) return '';
+    if (name) return this.processVar.attr(name) || '';
+    return this.processVar.attr() || {};
   }
 
   /**
    * 通过选择器、jQuery对象或元素来过滤，获取每个匹配元素的后代。
+   * 对于对象数组来说，可以通过选择每一个对象的某个值来比较，从而选中匹配的那一项对象
    * @param selector 选择器
+   * @param target 要匹配的值
    * @returns
    */
-  find(selector: string) {
-    return (this.processVar as CEle).find(selector || '');
+  find(selector: string, target?: string) {
+    if (isCheerio(this.processVar)) {
+      return this.processVar.find(selector || '');
+    }
+    if (!Array.isArray(this.processVar)) return {};
+    return this.processVar.find((item: Record<string, any>) => pickObject(item, selector) === target);
   }
 
   /**
@@ -221,7 +233,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   eq(index: number) {
-    return (this.processVar as CEle).eq(index);
+    if (!isCheerio(this.processVar)) return this.processVar;
+    return this.processVar.eq(index);
   }
 
   /**
@@ -229,7 +242,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   text() {
-    return (this.processVar as CEle).text();
+    if (!isCheerio(this.processVar)) return '';
+    return this.processVar.text();
   }
 
   /**
@@ -237,7 +251,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   html() {
-    return (this.processVar as CEle).html();
+    if (!isCheerio(this.processVar)) return '';
+    return this.processVar.html();
   }
 
   /**
@@ -249,7 +264,8 @@ export class Api implements CrawlerApi {
    * @returns
    */
   map(rules: Rules) {
-    return (this.processVar as CEle)
+    if (!isCheerio(this.processVar)) return [];
+    return this.processVar
       .map((_: number, eleItem: AnyNode) => {
         const api = new Api({
           url: this.url,
@@ -269,8 +285,9 @@ export class Api implements CrawlerApi {
    * @returns
    */
   each(handlers: Handler[]) {
+    if (!isCheerio(this.processVar)) return [];
     const res: any[] = [];
-    (this.processVar as CEle).each((_: number, eleItem: AnyNode) => {
+    this.processVar.each((_: number, eleItem: AnyNode) => {
       const api = new Api({
         url: this.url,
         rules: { temp: { handlers } },
