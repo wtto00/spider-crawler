@@ -1,3 +1,9 @@
+/**
+ * 把值插入到模板字符串中
+ * @param str 模板字符串
+ * @param values 要插入的值
+ * @returns
+ */
 export function formatString(str: string, values: Record<string, any>) {
   let res = str;
   Object.keys(values).forEach((key) => {
@@ -25,6 +31,12 @@ const rePropName = RegExp(
     '(?=(?:\\.|\\[\\])(?:\\.|\\[\\]|$))',
   'g',
 );
+/**
+ * 参考[lodash.get](https://www.lodashjs.com/docs/lodash.get)
+ * @param obj 要检索的对象
+ * @param selector  要获取属性的路径
+ * @returns
+ */
 export function pickObject(obj: Record<string, any>, selector: string) {
   if (!selector) return obj;
   const paths: string[] = [];
