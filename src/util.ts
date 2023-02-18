@@ -58,3 +58,13 @@ export function pickObject(obj: Record<string, any>, selector: string) {
   }
   return index && index == length ? obj : undefined;
 }
+
+/**
+ * 检测一个对象是否是Cheerio对象
+ * @param obj 要检测的对象
+ * @returns
+ */
+export function isCheerio(obj: any) {
+  if (typeof obj !== 'object') return false;
+  return Object.prototype.hasOwnProperty.call(obj, '_root');
+}
