@@ -214,11 +214,17 @@ export class Api implements CrawlerApi {
 
   /**
    * 通过选择器、jQuery对象或元素来过滤，获取每个匹配元素的后代。
+   * 对于对象数组来说，可以通过选择每一个对象的某个值来比较，从而选中匹配的那一项对象
    * @param selector 选择器
+   * @param target 要匹配的值
    * @returns
    */
-  find(selector: string) {
-    return (this.processVar as CEle).find(selector || '');
+  find(selector: string, target?: string) {
+    if (isCheerio(this.processVar)) {
+      return this.processVar.find(selector || '');
+    }
+    if (!Array.isArray(this.processVar)) return {};
+    return this.processVar.find((item: Record<string, any>) => pickObject(item, selector) === target);
   }
 
   /**

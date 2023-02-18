@@ -37,7 +37,7 @@ const rePropName = RegExp(
  * @param selector  要获取属性的路径
  * @returns
  */
-export function pickObject(obj: Record<string, any>, selector: string) {
+export function pickObject(obj: Record<string, any>, selector: string): any {
   if (!selector) return obj;
   const paths: string[] = [];
   selector.replace(rePropName, (match: string, expression: string, quote: string, subString: string) => {
