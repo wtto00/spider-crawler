@@ -15,6 +15,7 @@ export abstract class CrawlerApi {
   abstract sum(): number;
   abstract resolveUrl(): string;
   abstract decode(): string;
+  abstract length(): number;
 
   abstract attr(name?: string): string | Record<string, string>;
   abstract find(selector: string, target?: string): Cheerio<Element> | object;

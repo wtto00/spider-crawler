@@ -200,6 +200,14 @@ export class Api implements CrawlerApi {
   }
 
   /**
+   * 获取结果的长度
+   * @returns
+   */
+  length() {
+    return this.processVar?.length() || 0;
+  }
+
+  /**
    * 获取属性的方法。
    * 在匹配集合中只能获取的第一个元素的属性值。
    * @param name 属性名称
