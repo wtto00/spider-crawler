@@ -1,6 +1,6 @@
 {
   "name": "@wtto00/spider-crawler",
-  "version": "0.2.2-beta",
+  "version": "0.2.3-beta",
   "description": "定义一个json格式的爬虫规则，Nodejs按照该规则爬取所需要的内容",
   "type": "module",
   "main": "dist/lib/index.js",
