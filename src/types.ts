@@ -36,6 +36,7 @@ type Method =
   | 'sum'
   | 'resolveUrl'
   | 'decode'
+  | 'length'
   | 'attr'
   | 'find'
   | 'eq'
