@@ -26,24 +26,7 @@ export abstract class CrawlerApi {
   abstract each(handers: Handler[]): any[];
 }
 
-type Method =
-  | 'prefix'
-  | 'substring'
-  | 'replace'
-  | 'trim'
-  | 'number'
-  | 'br2nl'
-  | 'sum'
-  | 'resolveUrl'
-  | 'decode'
-  | 'length'
-  | 'attr'
-  | 'find'
-  | 'eq'
-  | 'text'
-  | 'html'
-  | 'map'
-  | 'each';
+type Method = keyof CrawlerApi;
 
 export interface HandlerType<T extends Method> {
   method: T;
