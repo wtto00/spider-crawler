@@ -15,17 +15,17 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        run: corepack enable
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          ref: ${{ github.event.release.target_commitish }}
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: latest
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
+          node-version: 20
           cache: 'pnpm'
           registry-url: https://npm.pkg.github.com/
+          cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: npm pkg set publishConfig.registry=https://npm.pkg.github.com
@@ -37,16 +37,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Publish Npm Package
     steps:
-      - uses: actions/checkout@v2.4.2
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        run: corepack enable
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          ref: ${{ github.event.release.target_commitish }}
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: latest
-      - uses: actions/setup-node@v3.4.1
-        with:
-          node-version: 16
+          node-version: 20
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install --frozen-lockfile
       - run: git config --global user.name "GitHub CD bot"

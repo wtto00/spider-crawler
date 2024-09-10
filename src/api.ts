@@ -1,7 +1,8 @@
-import { AnyNode, CheerioAPI, load } from 'cheerio';
+import { CheerioAPI, load } from 'cheerio';
 import { CrawlerError, ErrorCode } from './result.js';
 import type { CEle, CrawlerApi, DataType, Handler, Rules } from './types.js';
 import { isCheerio, pickObject } from './util.js';
+import type { AnyNode } from 'domhandler';
 
 interface CrawlerOptions {
   url?: string;
@@ -46,7 +47,7 @@ export class Api implements CrawlerApi {
     if (dataType === 'json') {
       try {
         this.source = JSON.parse(source as string);
-      } catch (error) {
+      } catch (_error) {
         throw new CrawlerError(ErrorCode.ILLEGALJSON);
       }
     } else {
