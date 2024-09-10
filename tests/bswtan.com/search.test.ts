@@ -1,13 +1,17 @@
 import type { CrawlerUrlOptions } from '../../src/types';
 import { crawlFromUrl } from '../../src/index.js';
 import { ResultCodes } from '../../src/result.js';
+import { Agent } from 'node:https';
+
+const agent = new Agent({ rejectUnauthorized: false });
 
 const searchOptions: CrawlerUrlOptions = {
   url: 'https://www.bswtan.com/modules/article/search.php',
   fetchOptions: {
     method: 'POST',
     body: 'searchkey=灵境',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.info' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.com' },
+    agent,
   },
   rules: {
     book: {
@@ -63,7 +67,8 @@ const emptyOptions: CrawlerUrlOptions = {
   fetchOptions: {
     method: 'POST',
     body: 'searchkey=1231232131',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.info' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.com' },
+    agent,
   },
 };
 

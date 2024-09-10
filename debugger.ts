@@ -1,11 +1,13 @@
 import { crawlFromUrl, CrawlerUrlOptions } from './src/index.js';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const options: CrawlerUrlOptions = {
   url: 'https://www.bswtan.com/modules/article/search.php',
   fetchOptions: {
     method: 'POST',
     body: 'searchkey=灵境',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.info' },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Host: 'www.biqukun.com' },
   },
   rules: {
     list: {

@@ -1,23 +1,25 @@
 name: Lint & Test
 
 on:
-  push:
+  pull_request:
     branches:
-      - 'dev'
+      - main
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint & Format
     steps:
-      - uses: actions/checkout@v2.4.2
-      - uses: pnpm/action-setup@v2.2.2
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        run: corepack enable
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          version: latest
-      - uses: actions/setup-node@v3.4.1
-        with:
-          node-version: 16
+          node-version: 20
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm format
       - run: pnpm lint
@@ -25,14 +27,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Test Crawler API
     steps:
-      - uses: actions/checkout@v2.4.2
-      - uses: pnpm/action-setup@v2.2.2
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        run: corepack enable
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          version: latest
-      - uses: actions/setup-node@v3.4.1
-        with:
-          node-version: 16
+          node-version: 20
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - name: Upload coverage reports to Codecov

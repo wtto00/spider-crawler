@@ -1,4 +1,5 @@
-import type { AnyNode, Cheerio, Element } from 'cheerio';
+import type { Cheerio } from 'cheerio';
+import type { AnyNode, Element } from 'domhandler';
 import type { RequestInit } from 'node-fetch';
 
 export type CEle = Cheerio<AnyNode>;
