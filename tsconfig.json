@@ -5,15 +5,13 @@
     "module": "ES2015",
     "lib": ["ESNext", "DOM"],
     "sourceMap": true,
-
     "baseUrl": ".",
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "dist/es",
-
     "strict": true,
-
     /* Additional Checks */
     "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "5.0",
     "importsNotUsedAsValues": "error",
     "isolatedModules": true,
     "noFallthroughCasesInSwitch": true,
@@ -22,16 +20,17 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-
     /* Module Resolution Options */
     "esModuleInterop": true,
     "moduleResolution": "Node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowJs": true
   },
   "ts-node": {
     "esm": true,
     "experimentalResolver": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "eslint.config.js", "jest.config.ts", "debugger.ts"],
+  "exclude": ["node_modules", "coverage"]
 }

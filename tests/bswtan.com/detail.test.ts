@@ -116,13 +116,11 @@ test('book detail', () =>
     expect(res.data['name']).toEqual('夜的命名术');
     expect(res.data['author']).toEqual('会说话的肘子');
     expect(res.data['category']).toEqual('玄幻小说');
-    expect(res.data['cover']).toEqual('https://www.biqukun.info/d/image/7/7657/7657s.jpg');
+    expect(res.data['cover']).toEqual('https://www.biqukun.com/d/image/7/7657/7657s.jpg');
     expect(res.data['description'].length).toBeGreaterThan(0);
-    expect(res.data['readUrl']).toEqual('https://www.biqukun.info/7/7657/');
+    expect(res.data['readUrl']).toEqual('https://www.biqukun.com/7/7657/');
     expect(res.data['status']).toEqual('连载中');
-    expect(res.data['authorLink']).toEqual(
-      'https://www.biqukun.info/modules/article/search.php?searchkey=会说话的肘子',
-    );
+    expect(res.data['authorLink']).toEqual('https://www.biqukun.com/modules/article/search.php?searchkey=会说话的肘子');
     expect(res.data['updateTime']).toHaveLength(19);
     expect(res.data['latestChapterName'].length).toBeGreaterThan(0);
     expect(res.data['latestChapterUrl'].length).toBeGreaterThan(0);

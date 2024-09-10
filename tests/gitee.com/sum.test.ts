@@ -13,6 +13,6 @@ const options: CrawlerUrlOptions = {
 test('for & sum', () => {
   return crawlFromUrl(options).then((res) => {
     expect(res.code).toBe(ResultCodes.SUCCESS);
-    expect(res.data['total']).toBe(12);
+    expect(res.data['total']).toBe(14);
   });
 });
